@@ -30,10 +30,11 @@ import tempfile
 import traceback
 
 from flask import request
-from flask_httpauth import HTTPBasicAuth
 
 config = require('../config')
 app = require('../app')
+httpauth = require('../httpauth')
+decorators = require('../decorators')
 models = require('../models')
 manifest = require('@ppym/manifest')
 semver = require('@ppym/semver')
@@ -43,73 +44,13 @@ User, Package, PackageVersion = models.User, \
     models.Package, models.PackageVersion
 
 
-# HTTP Auth
-## =========================================
-
-auth = HTTPBasicAuth()
-
-@auth.hash_password
-def hash_pw(username, password):
-  return models.hash_password(password)
-
-@auth.get_password
-def get_pw(username):
-  user = User.objects(name=username).first()
-  if user:
-    return user.passhash
-  return None
-
-# Helpers
-## =========================================
-
 def response(data, code=200):
   return flask.Response(json.dumps(data), code, mimetype='test/json')
 
-def expect_package_info(version_type=semver.Version, json=True):
-  def decorator(func):
-    @functools.wraps(func)
-    def wrapper(package, version, *args, **kwargs):
-      try:
-        version = version_type(version)
-      except ValueError as exc:
-        if json:
-          return response({'error': str(exc)}, 404)
-        else:
-          flask.abort(404)
-      return func(package, version, *args, **kwargs)
-    return wrapper
-  return decorator
-
-def json_catch_error():
-  def decorator(func):
-    @functools.wraps(func)
-    def wrapper(*args, **kwargs):
-      try:
-        return func(*args, **kwargs)
-      except Exception as exc:
-        traceback.print_exc()
-        if app.debug:
-          return response({'error': str(exc)}, 500)
-        else:
-          return response({'error': "internal server error"}, 500)
-    return wrapper
-  return decorator
-
-def on_return():
-  def decorator(func):
-    handlers = []
-    @functools.wraps(func)
-    def wrapper(*args, **kwargs):
-      return func(handlers, *args, **kwargs)
-    return wrapper
-  return decorator
-
-# Routes
-## =========================================
 
 @app.route('/api/find/<package>/<version>')
-@json_catch_error()
-@expect_package_info(semver.Selector)
+@decorators.json_catch_error()
+@decorators.expect_package_info(semver.Selector)
 def find(package, version):
   def not_found(): return response({'status': 'package-not-found'}, 404)
 
@@ -158,7 +99,7 @@ def find(package, version):
 
 
 @app.route('/api/download/<package>/<version>/<filename>')
-@expect_package_info(json=False)
+@decorators.expect_package_info(json=False)
 def download(package, version, filename):
   """
   Note: Serving these files should usually be replaced by NGinx or Apache.
@@ -170,12 +111,12 @@ def download(package, version, filename):
 
 
 @app.route('/api/upload/<package>/<version>', methods=['POST'])
-@auth.login_required
-@expect_package_info()
-@json_catch_error()
-@on_return()
+@httpauth.login_required
+@decorators.expect_package_info()
+@decorators.json_catch_error()
+@decorators.on_return()
 def upload(on_return, package, version):
-  user = User.objects(name=auth.username()).first()
+  user = User.objects(name=httpauth.username()).first()
   assert user
   if not user.validated:
     return response({'error': 'your email address is not verified'}, 403)
@@ -183,7 +124,7 @@ def upload(on_return, package, version):
   # If the package already exists, make sure the user is authorized.
   has_package = Package.objects(name=package).first()
   owner = has_package.owner if has_package else None
-  if owner and owner.name != auth.username():
+  if owner and owner.name != httpauth.username():
     return response({'error': 'not authorized to manage package "{}", '
         'it belongs to "{}"'.format(package, owner.name)}, 400)
 
@@ -244,7 +185,7 @@ def upload(on_return, package, version):
 
   # If the package doesn't belong to anyone, we'll add it to the user.
   if not owner:
-    user = User.objects(name=auth.username()).first()
+    user = User.objects(name=httpauth.username()).first()
     has_package = Package(name=package, owner=user)
     has_package.save()
     print('Added package', package, 'to user', user.name)
