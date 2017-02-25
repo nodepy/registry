@@ -51,23 +51,26 @@ class User(Document):
   def send_validation_mail(self):
     """
     Sends an email with a email verification link. The user must be saved
-    after this method is called.
+    after this method is called. Note that this method can raise
+    #ConnectionRefusedError if connecting to the SMTP server fails.
     """
 
     self.validation_token = str(uuid.uuid4())
-    me = config['upmd.email_origin']
+    me = config['registry.email.origin']
     html = flask.render_template('validate-email.html', user=self)
     part = email.MIMEText(html, 'html')
     part['Subject'] = 'Validate your upmpy.org email'
     part['From'] = me
     part['To'] = self.email
+
+    # Possible ConnectionRefusedError
     s = email.make_smtp()
     s.sendmail(me, [self.email], part.as_string())
     s.quit()
 
   def get_validation_url(self):
-    res = config['upmd.visible_url_scheme'] + '://'
-    res += config['upmd.visible_host']
+    res = config['registry.visible.url_scheme'] + '://'
+    res += config['registry.visible.host']
     res += flask.url_for('validate_email', token=self.validation_token)
     return res
 

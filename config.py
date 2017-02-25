@@ -33,7 +33,8 @@ config.defaults.update({
   'registry.mongodb.password': None,
   'registry.email.origin': 'no-reply@${registry.visible.host}',
   'registry.email.smtp_host': 'localhost:25',
-  'registry.email.stmp_ssl': 'false'
+  'registry.email.smtp_ssl': 'false',
+  'registry.require_email_verification': 'false'
 })
 
 exports = config

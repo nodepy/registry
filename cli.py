@@ -36,7 +36,7 @@ def cli():
 @cli.command()
 @click.option('-h', '--host')
 @click.option('-p', '--port', type=int)
-@click.option('-d', '--debug/--no-debug', default=None)
+@click.option('--debug/--no-debug', default=None)
 @click.option('--prefix')
 def run(host, port, debug, prefix):
   if host is None:

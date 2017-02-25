@@ -50,7 +50,7 @@ auth = HTTPBasicAuth()
 
 @auth.hash_password
 def hash_pw(username, password):
-  return hash_password(password)
+  return models.hash_password(password)
 
 @auth.get_password
 def get_pw(username):
@@ -113,7 +113,7 @@ def on_return():
 def find(package, version):
   def not_found(): return response({'status': 'package-not-found'}, 404)
 
-  directory = os.path.join(config['upmd.prefix'], package)
+  directory = os.path.join(config['registry.prefix'], package)
   print(directory)
   if not os.path.isdir(directory):
     return not_found()
@@ -164,7 +164,7 @@ def download(package, version, filename):
   Note: Serving these files should usually be replaced by NGinx or Apache.
   """
 
-  directory = os.path.join(config['upmd.prefix'], package, str(version))
+  directory = os.path.join(config['registry.prefix'], package, str(version))
   directory = os.path.normpath(os.path.abspath(directory))
   return flask.send_from_directory(directory, filename)
 
@@ -195,7 +195,7 @@ def upload(on_return, package, version):
   if filename == 'package.json':
     return response({'error': '"package.json" can not be uploaded directly'}, 400)
 
-  directory = os.path.join(config['upmd.prefix'], package, str(version))
+  directory = os.path.join(config['registry.prefix'], package, str(version))
   absfile = os.path.join(directory, filename)
   if os.path.isfile(absfile) and not force:
     return response({'error': 'file "{}" already exists'.format(filename)}, 400)
@@ -286,13 +286,23 @@ def register():
     return response({'error': 'user "{}" already exists'.format(username)}, 400)
   if User.objects(email=email).first():
     return response({'error': 'email "{}" already in use'.format(email)}, 400)
-  user = User(name=username, passhash=hash_password(password), email=email,
+  user = User(name=username, passhash=models.hash_password(password), email=email,
       validation_token=None, validated=False)
-  user.send_validation_mail()
+
+  if config['registry.require_email_verification'] == 'true':
+    try:
+      user.send_validation_mail()
+    except ConnectionRefusedError as exc:
+      app.logger.exception(exc)
+      return response({'error': 'Verification e-mail could not be sent, the '
+          'server\'s email settings may not be configured properly.'}, 503)
+  else:
+    user.validated = True
   user.save()
 
-  message = 'User registered successfully. Please verify your e-mail address '\
-      'by visiting the link we just sent you.'
-  if app.debug:
+  message = 'User registered successfully.'
+  if not user.validated:
+    message += 'Please check your inbox for a verification e-mail.'
+  if app.debug and not user.validated:
     message += ' DEBUG: Verify URL: {}'.format(user.get_validation_url())
   return response({'status': 'ok', 'message': message})
