@@ -47,6 +47,14 @@ def run(host, port, debug, prefix):
     debug = (config['registry.debug'].lower().strip() == 'true')
   if prefix is not None:
     config['registry.prefix'] = prefix
+
+  if debug:
+    # TODO: Support Werkzeug livereloader in ppy environments.
+    #       See ppym/engine#6.
+    print('note: Unfortunately, Flask debug mode (specifically livereload) '
+        'is currently not supported in ppy environments.')
+    debug = False
+
   app.run(host=host, port=port, debug=debug)
 
 
