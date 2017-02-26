@@ -4,6 +4,9 @@
   "license": "MIT",
   "description": "The ppy package registry server",
   "main": "cli",
+  "bin": {
+    "ppy-registry": "cli"
+  },
   "engines": {
     "python": ">=3.5.0"
   },
