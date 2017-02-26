@@ -1,4 +1,4 @@
 {% extends "registry/_base.html" %}
 {% block content %}
-  {{ markdown_resource('index.md') }}
+  {{ resources.load('index.md')|markdown|safe }}
 {% endblock %}

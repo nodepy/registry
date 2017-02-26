@@ -85,6 +85,11 @@ def validate_email(token=None):
   return render_template('registry/email/validated.html', user=user)
 
 
+@app.route('/terms')
+def terms():
+  return render_template('registry/terms.html')
+
+
 @app.errorhandler(404)
 def page_not_found(e):
   return render_template('registry/404.html')

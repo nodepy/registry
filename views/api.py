@@ -33,6 +33,7 @@ from flask_restful import Resource, Api
 
 fs = require('../fs')
 config = require('../config')
+resources = require('../resources')
 app = require('../app')
 httpauth = require('../httpauth')
 decorators = require('../decorators')
@@ -289,6 +290,13 @@ class Register(Resource):
     return {'message': message}
 
 
+class Terms(Resource):
+
+  def get(self):
+    # TODO: Add a "last-updated" field.
+    return {'terms': resources.load('TERMS.txt')}
+
+
 api.add_resource(FindPackage, '/api/find/<package>/<version>',
                               '/api/find/@<scope>/<package>/<version>')
 api.add_resource(Download,    '/api/download/<package>/<version>/<filename>',
@@ -296,3 +304,4 @@ api.add_resource(Download,    '/api/download/<package>/<version>/<filename>',
 api.add_resource(Upload,      '/api/upload/<package>/<version>',
                               '/api/upload/@<scope>/<package>/<version>')
 api.add_resource(Register,    '/api/register')
+api.add_resource(Terms,       '/api/terms', endpoint='api_terms')

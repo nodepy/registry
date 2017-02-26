@@ -19,14 +19,12 @@
 # THE SOFTWARE.
 
 import os
-from markdown import markdown
 
 
 def resolve(filename):
   return os.path.join(_dirname, 'resources', filename)
 
 
-def markdownify(resource_name):
-  filename = resolve(resource_name)
-  with open(filename) as fp:
-    return markdown(fp.read())
+def load(filename):
+  with open(resolve(filename)) as fp:
+    return fp.read()

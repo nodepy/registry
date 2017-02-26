@@ -10,7 +10,7 @@
   {% if version %}
     {% if version.readme %}
       <div class="package-readme">
-        {{ version.readme|markdown }}
+        {{ version.readme|markdown|safe }}
       </div>
     {% else %}
       <p>No package description provided.</p>

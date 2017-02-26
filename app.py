@@ -35,11 +35,11 @@ app.jinja_env.globals.update({
   'User': models.User,
   'Package': models.Package,
   'PackageVersion': models.PackageVersion,
-  'markdown_resource': lambda x: jinja2.Markup(resources.markdownify(x)),
+  'resources': resources
 })
 
 app.jinja_env.filters.update({
-  'markdown': lambda x: jinja2.Markup(resources.markdown(x))
+  'markdown': markdown.markdown,
 })
 
 exports = app
