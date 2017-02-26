@@ -34,12 +34,12 @@ def pjoin(scope, package):
 
 @app.route('/')
 def index():
-  return render_template('index.html', nav='index')
+  return render_template('registry/index.html', nav='index')
 
 
 @app.route('/browse')
 def browse():
-  return render_template('browse.html', nav='browse')
+  return render_template('registry/browse/index.html', nav='browse')
 
 
 @app.route('/browse/package/<package>')
@@ -48,7 +48,8 @@ def package(package, scope=None):
   package = Package.objects(name=pjoin(scope, package)).first()
   if not package:
     abort(404)
-  return render_template('package.html', nav='browse', package=package, version=package.latest)
+  return render_template('registry/browse/package.html',
+      package=package, version=package.latest, nav_title=package.name)
 
 
 @app.route('/browse/package/<package>/<version>')
@@ -60,7 +61,8 @@ def package_version(package, version, scope=None):
   version = PackageVersion.objects(package=package, version=version).first()
   if not version:
     abort(404)
-  return render_template('package.html', nav='browse', package=package, version=version)
+  return render_template('registry/browse/package.html',
+      package=package, version=version, nav_title='{}@{}'.format(package.name, version.version))
 
 
 @app.route('/browse/user/<user>')
@@ -68,15 +70,26 @@ def user(user):
   user = User.objects(name=user).first()
   if not user:
     abort(404)
-  return render_template('user.html', nav='browse', user=user)
+  return render_template('registry/browse/user.html', nav='browse', user=user)
 
 
-@app.route('/validate-email/<token>')
-def validate_email(token):
+@app.route('/email/validate/<token>')
+@app.route('/email/validate')
+def validate_email(token=None):
   user = User.objects(validation_token=token).first()
   if not user or user.validated:
     abort(404)
   user.validated = True
   user.validation_token = None
   user.save()
-  return render_template('validated.html', user=user)
+  return render_template('registry/email/validated.html', user=user)
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+  return render_template('registry/404.html')
+
+
+@app.errorhandler(500)
+def page_not_found(e):
+  return render_template('registry/500.html')

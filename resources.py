@@ -18,28 +18,15 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-import flask
-import jinja2
-import markdown
-
-models = require('./models')
-resources = require('./resources')
+import os
+from markdown import markdown
 
 
-app = flask.Flask('ppy-registry')
-app.config['TEMPLATES_AUTO_RELOAD'] = True
+def resolve(filename):
+  return os.path.join(_dirname, 'resources', filename)
 
-# Initialize the Jinja environment globals and filters..
-app.jinja_env.globals.update({
-  'active': lambda v, x: jinja2.Markup('class="active"') if v == x else '',
-  'User': models.User,
-  'Package': models.Package,
-  'PackageVersion': models.PackageVersion,
-  'markdown_resource': lambda x: jinja2.Markup(resources.markdownify(x)),
-})
 
-app.jinja_env.filters.update({
-  'markdown': lambda x: jinja2.Markup(resources.markdown(x))
-})
-
-exports = app
+def markdownify(resource_name):
+  filename = resolve(resource_name)
+  with open(filename) as fp:
+    return markdown(fp.read())

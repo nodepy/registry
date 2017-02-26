@@ -1,11 +1,11 @@
-{% extends "_template.html" %}
-{% block body %}
-  <h1><span class="damp">Package</span> {{ package.name }}</h1>
+{% extends "registry/_base.html" %}
+{% block content %}
   <p>
-    Owned by <a href="{{ url_for('user', user=package.owner.name) }}">{{ package.owner.name }}</a>
+    Package <a href="{{ url_for('package', package=package.name) }}">{{ package.name }}</a>
     {% if version %}
-      &ndash; Version: <a href="{{ url_for('package_version', package=package.name, version=version.version) }}">{{ version.version }}</a>
+      <a href="{{ url_for('package_version', package=package.name, version=version.version) }}">@{{ version.version }}</a>
     {% endif %}
+    Owned by <a href="{{ url_for('user', user=package.owner.name) }}">{{ package.owner.name }}</a>
   </p>
   {% if version %}
     {% if version.readme %}
@@ -24,4 +24,4 @@
   {% else %}
     <p>No versions available.</p>
   {% endif %}
-{% endblock body %}
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends "materialize.html" %}
+{% block body %}
+  <nav>
+    <div class="nav-wrapper blue lighten-2">
+      <ul id="nav-mobile" class="left hide-on-med-and-down">
+        <li {{ active(nav, 'index') }}><a href="{{ url_for('index') }}"><i class="material-icons left">home</i> ppym</a></li>
+        <li {{ active(nav, 'browse') }}><a href="{{ url_for('browse') }}"><i class="material-icons left">view_module</i> Browse Packages</a></li>
+        {% if nav_title %}
+          <li class="active"><a><i class="material-icons left">receipt</i> {{ nav_title }}</a></li>
+        {% endif %}
+      </ul>
+    </div>
+  </nav>
+  <div class="container">
+    <div class="row">
+      {% block content %}
+      {% endblock %}
+    </div>
+  </div>
+{% endblock %}
