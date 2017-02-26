@@ -268,7 +268,7 @@ class Register(Resource):
     user = User(name=username, passhash=models.hash_password(password),
         email=email, validation_token=None, validated=False)
 
-    if config['registry.require_email_verification'] != 'true':
+    if config['registry.email.require_verification'] != 'true':
       user.validated = True
     else:
       try:
