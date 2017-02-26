@@ -22,9 +22,14 @@ from flask import abort, request, render_template
 
 app = require('../app')
 models = require('../models')
+refstring = require('@ppym/refstring')
 
 User, Package, PackageVersion = models.User, \
     models.Package, models.PackageVersion
+
+
+def pjoin(scope, package):
+  return refstring.join(scope=scope, name=package)
 
 
 @app.route('/')
@@ -37,17 +42,19 @@ def browse():
   return render_template('browse.html', nav='browse')
 
 
-@app.route('/package/<package>')
-def package(package):
-  package = Package.objects(name=package).first()
+@app.route('/browse/package/<package>')
+@app.route('/browse/package/@<scope>/<package>')
+def package(package, scope=None):
+  package = Package.objects(name=pjoin(scope, package)).first()
   if not package:
     abort(404)
   return render_template('package.html', nav='browse', package=package, version=package.latest)
 
 
-@app.route('/package/<package>/<version>')
-def package_version(package, version):
-  package = Package.objects(name=package).first()
+@app.route('/browse/package/<package>/<version>')
+@app.route('/browse/package/@<scope>/<package>/<version>')
+def package_version(package, version, scope=None):
+  package = Package.objects(name=pjoin(scope, package)).first()
   if not package:
     abort(404)
   version = PackageVersion.objects(package=package, version=version).first()
@@ -56,7 +63,7 @@ def package_version(package, version):
   return render_template('package.html', nav='browse', package=package, version=version)
 
 
-@app.route('/user/<user>')
+@app.route('/browse/user/<user>')
 def user(user):
   user = User.objects(name=user).first()
   if not user:

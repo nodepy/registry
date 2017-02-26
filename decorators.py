@@ -18,65 +18,36 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-import flask
 import functools
-semver = require('@ppym/semver')
 
 
-def expect_package_info(version_type=semver.Version, json=True):
-  """
-  Decorator for views that have a package and version parameter.
-  """
-
-  def decorator(func):
-    @functools.wraps(func)
-    def wrapper(package, version, *args, **kwargs):
-      try:
-        version = version_type(version)
-      except ValueError as exc:
-        if json:
-          return response({'error': str(exc)}, 404)
-        else:
-          flask.abort(404)
-      return func(package, version, *args, **kwargs)
-    return wrapper
-  return decorator
-
-
-def json_catch_error():
-  """
-  Decorator to catch exceptions and turn them into JSON 500 responses.
-  """
-
-  def decorator(func):
-    @functools.wraps(func)
-    def wrapper(*args, **kwargs):
-      try:
-        return func(*args, **kwargs)
-      except Exception as exc:
-        traceback.print_exc()
-        if app.debug:
-          return response({'error': str(exc)}, 500)
-        else:
-          return response({'error': "internal server error"}, 500)
-    return wrapper
-  return decorator
-
-
-def on_return():
+def finally_(is_method=False):
   """
   Passes an additional parameter at the beginning which is a list of callables
   that will be called after the function returns.
   """
 
-  def decorator(func):
-    handlers = []
-    @functools.wraps(func)
-    def wrapper(*args, **kwargs):
-      try:
-        return func(handlers, *args, **kwargs)
-      finally:
-        for handler in handlers:
-          handler()
-    return wrapper
+  if is_method:
+    def decorator(func):
+      @functools.wraps(func)
+      def wrapper(self, *args, **kwargs):
+        handlers = []
+        try:
+          return func(self, handlers, *args, **kwargs)
+        finally:
+          for handler in handlers:
+            handler()
+      return wrapper
+  else:
+    def decorator(func):
+      @functools.wraps(func)
+      def wrapper(*args, **kwargs):
+        handlers = []
+        try:
+          return func(handlers, *args, **kwargs)
+        finally:
+          for handler in handlers:
+            handler()
+      return wrapper
+
   return decorator

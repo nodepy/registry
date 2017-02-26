@@ -18,6 +18,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+import os
+
 config = require.session.config
 config.defaults.update({
   'registry.host': 'localhost',
@@ -25,7 +27,7 @@ config.defaults.update({
   'registry.visible.host': '${registry.host}:${registry.port}',
   'registry.visible.url_scheme': 'http',
   'registry.debug': 'false',
-  'registry.prefix': '~/ppy_registry',
+  'registry.prefix': './ppy_registry',
   'registry.mongodb.host': 'localhost',
   'registry.mongodb.port': '27017',
   'registry.mongodb.db': 'ppy_registry',
@@ -37,4 +39,5 @@ config.defaults.update({
   'registry.require_email_verification': 'false'
 })
 
+config['registry.prefix'] = os.path.expanduser(config['registry.prefix'])
 exports = config

@@ -27,10 +27,11 @@ import shutil
 import sys
 import tarfile
 import tempfile
-import traceback
 
 from flask import request
+from flask_restful import Resource, Api
 
+fs = require('../fs')
 config = require('../config')
 app = require('../app')
 httpauth = require('../httpauth')
@@ -38,212 +39,260 @@ decorators = require('../decorators')
 models = require('../models')
 manifest = require('@ppym/manifest')
 semver = require('@ppym/semver')
+refstring = require('@ppym/refstring')
 registry_client = require('@ppym/ppym/registry')
 
 User, Package, PackageVersion = models.User, \
     models.Package, models.PackageVersion
 
 
-def response(data, code=200):
-  return flask.Response(json.dumps(data), code, mimetype='test/json')
+api = Api(app)
 
 
-@app.route('/api/find/<package>/<version>')
-@decorators.json_catch_error()
-@decorators.expect_package_info(semver.Selector)
-def find(package, version):
-  def not_found(): return response({'status': 'package-not-found'}, 404)
+def _error(title, description, code):
+  return {'error': {'title': title, 'description': description}}, code
 
-  directory = os.path.join(config['registry.prefix'], package)
-  print(directory)
-  if not os.path.isdir(directory):
-    return not_found()
+def email_not_verified(user):
+  return _error('Unauthroized access', 'Your email address is not verified', 403)
 
-  choices = []
-  for have_version in os.listdir(directory):
+def unauthorized_access(user, pkg):
+  return _error('Unauthroized access',
+      'You do not have privileges to make changes to the '
+        'package "{}"'.format(pkg.name),
+      403)
+
+def bad_request(description):
+  return _error('Bad request', description, 400)
+
+def service_unavailable(description):
+  return _error('Serice unavailable', description, 503)
+
+def pjoin(scope, package):
+  return refstring.join(scope=scope, name=package)
+
+
+class FindPackage(Resource):
+
+  def get(self, package, version, scope=None):
+    package = pjoin(scope, package)
     try:
-      have_version = semver.Version(have_version)
+      version = semver.Selector(version)
     except ValueError as exc:
-      app.logger.warn('invalid version directory found at "{}"'.format(
-          os.path.join(directory, have_version)))
-      continue
-    if version(have_version):
-      choices.append(have_version)
+      flask.abort(404)
 
-  if not choices:
-    return not_found()
+    # Check our database of available packages.
+    package_obj = Package.objects(name=package).first()
+    if not package_obj:
+      return self.not_found(package, version)
 
-  choice = version.best_of(choices)
-  directory = os.path.join(directory, str(choice))
-  try:
-    manifest = PackageManifest.parse(directory)
-  except NotAPackageDirectory:
-    app.logger.warn('missing package.json in "{}"'.format(directory))
-    return not_found()
-  except InvalidPackageManifest as exc:
-    app.logger.warn('invalid package.json in "{}": {}'.format(directory, exc))
-    return not_found()
-  if manifest.name != package:
-    app.logger.warn('"{}" lists unexpected package name "{}"'.format(
-        manifest.filename, manifest.name))
-    return not_found()
-  if manifest.version != choice:
-    app.logger.warn('"{}" lists unexpected version "{}"'.format(
-        manifest.filename, manifest.version))
-    return not_found()
+    # Find a matching version.
+    versions = PackageVersion.objects(package=package_obj)
+    key = lambda x: semver.Version(x.version)
+    best = version.best_of(versions, key=key)
 
-  with open(manifest.filename) as fp:
-    data = json.load(fp)
-  data = {'status': 'ok', 'manifest': data}
-  return response(data)
+    return best.manifest
+
+  def not_found(self, package, version):
+    return {'error': {
+      'title': 'Package not found',
+      'description': 'No package matching "{}@{}" could be found in the '
+          'registry.'.format(package, version)
+    }}, 404
 
 
-@app.route('/api/download/<package>/<version>/<filename>')
-@decorators.expect_package_info(json=False)
-def download(package, version, filename):
+
+class Download(Resource):
   """
-  Note: Serving these files should usually be replaced by NGinx or Apache.
+  Note: Serving files should usually be performed by a real web server like
+  NGinx or Apache. This API call is only available for development purposes.
   """
 
-  directory = os.path.join(config['registry.prefix'], package, str(version))
-  directory = os.path.normpath(os.path.abspath(directory))
-  return flask.send_from_directory(directory, filename)
+  def get(self, package, version, filename, scope=None):
+    package = pjoin(scope, package)
+    directory = os.path.join(config['registry.prefix'], package, version)
+    directory = os.path.normpath(os.path.abspath(directory))
+    return flask.send_from_directory(directory, filename)
 
 
-@app.route('/api/upload/<package>/<version>', methods=['POST'])
-@httpauth.login_required
-@decorators.expect_package_info()
-@decorators.json_catch_error()
-@decorators.on_return()
-def upload(on_return, package, version):
-  user = User.objects(name=httpauth.username()).first()
-  assert user
-  if not user.validated:
-    return response({'error': 'your email address is not verified'}, 403)
+class Upload(Resource):
 
-  # If the package already exists, make sure the user is authorized.
-  has_package = Package.objects(name=package).first()
-  owner = has_package.owner if has_package else None
-  if owner and owner.name != httpauth.username():
-    return response({'error': 'not authorized to manage package "{}", '
-        'it belongs to "{}"'.format(package, owner.name)}, 400)
-
-  force = request.args.get('force', 'false').lower().strip() == 'true'
-  if len(request.files) != 1:
-    return response({'error': 'zero or more than 1 file(s) uploaded'}, 400)
-
-  filename, storage = next(request.files.items())
-  if filename == 'package.json':
-    return response({'error': '"package.json" can not be uploaded directly'}, 400)
-
-  directory = os.path.join(config['registry.prefix'], package, str(version))
-  absfile = os.path.join(directory, filename)
-  if os.path.isfile(absfile) and not force:
-    return response({'error': 'file "{}" already exists'.format(filename)}, 400)
-
-  if filename == registry_client.get_package_archive_name(package, version):
-    # Save the file to a temporary path because we can only read from the
-    # FileStorage once.
-    with tempfile.NamedTemporaryFile(suffix='_' + filename, delete=False) as tmp:
-      shutil.copyfileobj(storage, tmp)
-    on_return.append(tmp.delete)
-
-    # Open the tar archive and read the package.json and README.md.
-    with tarfile.open(tmp.name, mode='r') as tar:
-      try:
-        manifest_data = tar.extractfile('package.json').read().decode('utf8')
-      except KeyError as exc:
-        return response({'error': 'no `package.json` in the uploaded archive'}, 400)
-      try:
-        readme = tar.extractfile('README.md').read().decode('utf8')
-      except KeyError:
-        readme = None
-
-    # Parse the manifest.s
+  @httpauth.login_required
+  @decorators.finally_(True)
+  def post(self, finally_, package, version, scope=None):
+    package = pjoin(scope, package)
     try:
-      manifest = PackageManifest.parse_file(io.StringIO(manifest_data), directory)
-    except InvalidPackageManifest as exc:
-      return response({'error': 'invalid package manifest: {}'.format(exc)}, 400)
-    if not manifest.license:
-      return response({'error': 'packages on the registry must have a '
-          '`license` defined in the manifest'}, 400)
+      refstring.parse_package(package)
+      version = semver.Version(version)
+    except ValueError:
+      flask.abort(404)
 
-    # Save the package.json into the directory.
-    if not os.path.isdir(directory):
-      os.makedirs(directory)
-    with open(os.path.join(directory, 'package.json'), 'w') as fp:
-      fp.write(manifest_data)
+    replies = []
 
-    # Copy the contents archive into the package version directory.
-    shutil.copyfile(tmp.name, absfile)
-  elif not os.path.isfile(os.path.join(directory, 'package.json')):
-    return response({'error': 'package distribution must be uploaded before '
-        'any additional files can be accepted'}, 400)
-  else:
-    manifest = None
-    storage.save(absfile)
-
-  # If the package doesn't belong to anyone, we'll add it to the user.
-  if not owner:
+    # Find the authenticated user. We should always get one because we
+    # use the same mechanism in httpauth.
     user = User.objects(name=httpauth.username()).first()
-    has_package = Package(name=package, owner=user)
-    has_package.save()
-    print('Added package', package, 'to user', user.name)
+    if not user.validated:
+      return email_not_verified(user)
 
-  # Create the version if it doesn't exist already.
-  pv = PackageVersion.objects(package=has_package, version=str(version)).first()
-  if not pv:
-    assert manifest
-    pv = PackageVersion(package=has_package, version=str(version))
-    print('Added version', manifest.version, 'to package', package)
-  if manifest:
-    pv.readme = readme
-  pv.files.append(filename)
-  pv.save()
+    # Find the package information in our database.
+    pkg = Package.objects(name=package).first()
+    if pkg and pkg.owner != user:
+      return unauthorized_access(user, pkg)
+    pkgversion = PackageVersion.objects(package=pkg, version=str(version)).first()
 
-  # Update the latest version if this one is newer than what we had
-  # saved previously as the most recent version.
-  if not has_package.latest or manifest.version > semver.Version(has_package.latest.version):
-    has_package.latest = pv
-    has_package.save()
+    # We only expect 1 file to be uploaded per request.
+    if len(request.files) != 1:
+      return bad_request('zero or more than 1 file(s) uploaded')
+    filename, storage = next(request.files.items())
+    if filename == 'package.json':
+      return bad_request('"package.json" can not be uploaded directly')
 
-  return response({'status': 'ok'})
+    # Get the directory and filename to upload the file to.
+    directory = os.path.join(config['registry.prefix'], package, str(version))
+    absfile = os.path.join(directory, filename)
+
+    # Check if the upload should be forced even if the file already exists.
+    force = request.args.get('force', 'false').lower().strip() == 'true'
+    if os.path.isfile(absfile) and not force:
+      return bad_request('file "{} already exists'.format(filename))
+
+    # Handle package source distributions special: Unpack the package.json
+    # and README.md file and store the information in the database.
+    if filename == registry_client.get_package_archive_name(package, version):
+      # Save the uploaded file to a temporary path. Make sure it gets
+      # deleted when we're done with the request.
+      with tempfile.NamedTemporaryFile(suffix='_' + filename, delete=False) as tmp:
+        shutil.copyfileobj(storage, tmp)
+      finally_.append(lambda: fs.silentremove(tmp.name))
+
+      # Extract the package.json and README.md files.
+      files = {}
+      with tarfile.open(tmp.name, mode='r') as tar:
+        for fn in ['package.json', 'README.md']:
+          try:
+            files[fn] = tar.extractfile(fn).read().decode('utf8')
+          except KeyError:
+            pass
+
+      if 'package.json' not in files:
+        return bad_request('The uploaded package distribution archive does '
+            'not container a package.json file')
+
+      # Parse the manifest.
+      try:
+        pkgmf_json = json.loads(files['package.json'])
+        pkgmf = manifest.parse_dict(pkgmf_json)
+      except (json.JSONDecodeError, manifest.InvalidPackageManifest) as exc:
+        return bad_request('Invalid package manifest: {}'.format(exc))
+      if not pkgmf.license:
+        return bad_request('Packages uploaded to the registry must specify '
+            'the `license` field.')
+      if pkgmf.name != package or pkgmf.version != version:
+        return bad_request('The uploaded package distribution achive does '
+            'not match with the target version. You are trying to uploaded '
+            'the archive to "{}@{}" but the manifest says it is actually '
+            '"{}".'.format(package, version, pkgmf.identifer))
+
+      # Now that we validated the archive and its manifest, we can copy
+      # it into our target directory.
+      if not os.path.isdir(directory):
+        os.makedirs(directory)
+      shutil.move(tmp.name, absfile)
+
+      # If the package did not exist yet, make sure it exists in the
+      # database.
+      if not pkg:
+        replies.append('Added package "{}" to user "{}"'.format(package, user.name))
+        pkg = Package(name=package, owner=user)
+        pkg.save()
+
+      # Same for the version.
+      if not pkgversion:
+        replies.append('Added new package version "{}"'.format(pkgmf.identifier))
+        pkgversion = PackageVersion(package=pkg, version=str(version))
+      else:
+        replies.append('Updated package version "{}"'.format(pkgmf.identifier))
+      pkgversion.readme = files.get('README.md', '')
+      pkgversion.manifest = pkgmf_json
+      pkgversion.add_file(filename)
+      pkgversion.save()
+
+      # Update the 'latest' member in the Package.
+      if pkg.update_latest(pkgversion):
+        replies.append('{} is now the newest version of package "{}"'.format(
+            pkgversion.version, pkg.name))
+
+    # This does not appear to be a package distribution archive.
+    # We only allow additional files after a distribution was uploaded
+    # at least once.
+    else:
+      if not pkgversion:
+        return bad_request('Additional file uploads are only allowed after '
+            'a package distribution was uploaded at least once.')
+
+      if os.path.isfile(absfile):
+        replies.append('File "{}" updated.'.format(filename))
+      else:
+        replies.append('File "{}" saved.'.format(filename))
+
+      # Simply save the file to the directory.
+      storage.save(absfile)
+      pkgmf = None
+      pkgversion.add_file(filename)
+      pkgversion.save()
+
+    return {'message': '\n'.join(replies)}
 
 
-@app.route('/api/register', methods=['POST'])
-def register():
-  username = request.form.get('username')
-  password = request.form.get('password')
-  email = request.form.get('email')
-  if not username or len(username) < 3 or len(username) > 24:
-    return response({'error': 'no or invalid username specified'}, 400)
-  if not password or len(password) < 6 or len(password) > 64:
-    return response({'error': 'no or invalid password specified'}, 400)
-  if not email or len(email) < 4 or len(email) > 64:
-    return response({'error': 'no or invalid email specified'}, 400)
+class Register(Resource):
 
-  user = User.objects(name=username).first()
-  if user:
-    return response({'error': 'user "{}" already exists'.format(username)}, 400)
-  if User.objects(email=email).first():
-    return response({'error': 'email "{}" already in use'.format(email)}, 400)
-  user = User(name=username, passhash=models.hash_password(password), email=email,
-      validation_token=None, validated=False)
+  def post(self):
+    username = request.form.get('username')
+    password = request.form.get('password')
+    email = request.form.get('email')
+    if not username or len(username) < 3 or len(username) > 24:
+      return bad_requests('No or invalid username specified')
+    if not password or len(password) < 6 or len(password) > 64:
+      return bad_requests('No or invalid password specified')
+    if not email or len(email) < 4 or len(email) > 64:
+      return bad_requests('No or invalid email specified')
 
-  if config['registry.require_email_verification'] == 'true':
-    try:
-      user.send_validation_mail()
-    except ConnectionRefusedError as exc:
-      app.logger.exception(exc)
-      return response({'error': 'Verification e-mail could not be sent, the '
-          'server\'s email settings may not be configured properly.'}, 503)
-  else:
-    user.validated = True
-  user.save()
+    user = User.objects(name=username).first()
+    if user:
+      return bad_request('User "{}" already exists'.format(username))
+    if User.objects(email=email).first():
+      return bad_request('Email "{}" is already in use'.format(email))
+    # TODO: Validate that `email` is a valid email address.
 
-  message = 'User registered successfully.'
-  if not user.validated:
-    message += 'Please check your inbox for a verification e-mail.'
-  if app.debug and not user.validated:
-    message += ' DEBUG: Verify URL: {}'.format(user.get_validation_url())
-  return response({'status': 'ok', 'message': message})
+    # Create the new user object.
+    user = User(name=username, passhash=models.hash_password(password),
+        email=email, validation_token=None, validated=False)
+
+    if config['registry.require_email_verification'] != 'true':
+      user.validated = True
+    else:
+      try:
+        user.send_validation_mail()
+      except ConnectionRefusedError as exc:
+        app.logger.exception(exc)
+        return service_unavailable('Verification e-mail could not be sent, '
+            'the server\'s email settings may not be configured properly.')
+
+    user.save()
+
+    message = 'User registered successfully.'
+    if not user.validated:
+      message += 'Please check your inbox for a verification e-mail.'
+    if app.debug and not user.validated:
+      message += ' DEBUG: Verify URL: {}'.format(user.get_validation_url())
+
+    return {'message': message}
+
+
+api.add_resource(FindPackage, '/api/find/<package>/<version>',
+                              '/api/find/@<scope>/<package>/<version>')
+api.add_resource(Download,    '/api/download/<package>/<version>/<filename>',
+                              '/api/download/@<scope>/<package>/<version>/<filename>')
+api.add_resource(Upload,      '/api/upload/<package>/<version>',
+                              '/api/upload/@<scope>/<package>/<version>')
+api.add_resource(Register,    '/api/register')

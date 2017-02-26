@@ -27,6 +27,7 @@ from mongoengine import *
 
 config = require('./config')
 email = require('./email')
+semver = require('@ppym/semver')
 
 # Note: if you experience extremly long load times, it might be because
 # the mongo host can not be reached.
@@ -81,6 +82,14 @@ class Package(Document):
   latest = ReferenceField('PackageVersion', DENY)
   created = DateTimeField(default=datetime.now)
 
+  def update_latest(self, version, save=True):
+    assert isinstance(version, PackageVersion)
+    assert version.package == self
+    if not self.latest or semver.Version(version.version) > semver.Version(self.latest.version):
+      self.latest = version
+      if save:
+        self.save()
+
 
 class PackageVersion(Document):
   package = ReferenceField('Package', CASCADE)
@@ -88,6 +97,11 @@ class PackageVersion(Document):
   created = DateTimeField(default=datetime.now)
   files = ListField(StringField())
   readme = StringField()
+  manifest = DynamicField()
+
+  def add_file(self, filename):
+    if filename not in self.files:
+      self.files.append(filename)
 
 
 def hash_password(password):

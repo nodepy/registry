@@ -18,26 +18,13 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-import flask
-import jinja2
-import markdown
-
-models = require('./models')
+import errno
+import os
 
 
-app = flask.Flask('ppy-registry', static_url_path='/some/more/static/paths')
-app.config['TEMPLATES_AUTO_RELOAD'] = True
-
-# Initialize the Jinja environment globals and filters..
-app.jinja_env.globals.update({
-  'active': lambda v, x: jinja2.Markup('class="active"') if v == x else '',
-  'User': models.User,
-  'Package': models.Package,
-  'PackageVersion': models.PackageVersion,
-})
-
-app.jinja_env.filters.update({
-  'markdown': lambda x: jinja2.Markup(markdown.markdown(x))
-})
-
-exports = app
+def silentremove(path):
+  try:
+    os.remove(path)
+  except OSError as exc:
+    if exc.errno != errno.ENOENT:
+      raise
