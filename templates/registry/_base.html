@@ -1,20 +1,63 @@
 {% extends "materialize.html" %}
+{% block head %}
+  <style>
+  body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+  }
+
+  main {
+    flex: 1 0 auto;
+  }</style>
+{% endblock %}
 {% block body %}
-  <nav>
-    <div class="nav-wrapper blue lighten-2">
-      <ul id="nav-mobile" class="left hide-on-med-and-down">
-        <li {{ active(nav, 'index') }}><a href="{{ url_for('index') }}"><i class="material-icons left">home</i> ppym</a></li>
-        <li {{ active(nav, 'browse') }}><a href="{{ url_for('browse') }}"><i class="material-icons left">view_module</i> Browse Packages</a></li>
-        {% if nav_title %}
-          <li class="active"><a><i class="material-icons left">receipt</i> {{ nav_title }}</a></li>
-        {% endif %}
-      </ul>
+  <header class="blue">
+    <nav>
+      <div class="nav-wrapper blue">
+        <ul id="nav-mobile" class="left hide-on-med-and-down">
+          <li {{ active(nav, 'index') }}><a href="{{ url_for('index') }}"><i class="material-icons left">home</i> ppym</a></li>
+          <li {{ active(nav, 'browse') }}><a href="{{ url_for('browse') }}"><i class="material-icons left">view_module</i> Browse Packages</a></li>
+          {% if nav_title %}
+            <li class="active"><a><i class="material-icons left">receipt</i> {{ nav_title }}</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <div class="container">
+      <div class="row">
+        {% block content %}
+        {% endblock %}
+      </div>
     </div>
-  </nav>
-  <div class="container">
-    <div class="row">
-      {% block content %}
-      {% endblock %}
+  </main>
+  <footer class="page-footer blue">
+    <div class="container">
+      <div class="row">
+        <div class="col l4 s12">
+          <h5 class="white-text">Links</h5>
+          <ul>
+            <li><a class="grey-text text-lighten-3" href="http://materializecss.com/">Materialize CSS</a></li>
+            <li><a class="grey-text text-lighten-3" href="https://github.com/ppym">GitHub</a></li>
+          </ul>
+        </div>
+        <div class="col l4 offset-l2 s12">
+          <h5 class="white-text">Legal Stuff</h5>
+          <ul>
+            <li><a class="grey-text text-lighten-3" href="{{ url_for('terms') }}">Terms and License</a></li>
+            <li><a class="grey-text text-lighten-3" href="http://materializecss.com/">Materialize CSS</a></li>
+            <li><a class="grey-text text-lighten-3" href="https://github.com/ppym">GitHub</a></li>
+          </ul>
+        </div>
+      </div>
     </div>
-  </div>
+    <div class="footer-copyright">
+      <div class="container">
+        &copy; Copyright 2017 Niklas Rosenstein
+        <a class="grey-text text-lighten-4 right" href="https://github.com/ppym/registry">@ppym/registry@{{ __version__ }}</a>
+      </div>
+    </div>
+  </footer>
 {% endblock %}
