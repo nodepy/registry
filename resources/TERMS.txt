@@ -1,5 +1,5 @@
 ==============================================================================
-#                PPY package registry  -- Term and Licenses                  #
+#                ppy package registry -- Terms and Licenses                  #
 ==============================================================================
 
 License terms and notices for the ppy and ppym command-line programs can be
