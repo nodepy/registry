@@ -13,6 +13,13 @@ foundation for loading Python modules resolved from actual filenames with a
 You have to register an account via the **ppym** command and then validate
 your e-mail address in order to upload packages.
 
-    $ ppym register --agree-tos
+    $ ppym register --agree-tos --save
+    Username? ...
+    Password?
+    Confirm Password?
+    E-Mail?
+    User registered successfully. Please check your inbox for a
+    verification e-mail.
+    Username saved in ~/.ppyrc
     $ ppym dist
     $ ppym upload dist/mypackage-1.0.0.tar.gz

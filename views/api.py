@@ -283,7 +283,7 @@ class Register(Resource):
 
     message = 'User registered successfully.'
     if not user.validated:
-      message += 'Please check your inbox for a verification e-mail.'
+      message += ' Please check your inbox for a verification e-mail.'
     if app.debug and not user.validated:
       message += ' DEBUG: Verify URL: {}'.format(user.get_validation_url())
 
