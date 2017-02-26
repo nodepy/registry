@@ -1,4 +1,5 @@
-# PPY package registry
+<img src="/static/img/popeye-small.png" align="left"></img>
+# ppy package registry
 
 *Build Python applications the Node way.*
 
