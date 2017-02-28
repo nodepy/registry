@@ -1,4 +1,4 @@
-<img src="/static/img/popeye-small.png" align="left"></img>
+<img src="/static/img/popeye-small.png" align="left" style="margin-right: 1em;"></img>
 # ppy package registry
 
 *Build Python applications the Node way.*

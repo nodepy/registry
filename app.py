@@ -38,7 +38,8 @@ app.jinja_env.globals.update({
   'User': models.User,
   'Package': models.Package,
   'PackageVersion': models.PackageVersion,
-  'resources': resources
+  'resources': resources,
+  'config': require('./config')
 })
 
 app.jinja_env.filters.update({

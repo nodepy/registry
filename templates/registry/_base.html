@@ -50,6 +50,9 @@
           <ul>
             <li><a class="grey-text text-lighten-3" href="{{ url_for('terms') }}">Terms of Use</a></li>
           </ul>
+          {% if config['registry.accept_registrations'] != 'true' %}
+            <blockquote><p class="white-text"><b>Note:</b> New registrations are disabled.</p></blockquote>
+          {% endif %}
         </div>
       </div>
     </div>
