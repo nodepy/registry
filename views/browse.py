@@ -28,10 +28,6 @@ User, Package, PackageVersion = models.User, \
     models.Package, models.PackageVersion
 
 
-def pjoin(scope, package):
-  return refstring.join(scope=scope, name=package)
-
-
 @app.route('/')
 def index():
   return render_template('registry/index.html', nav='index')
@@ -45,7 +41,7 @@ def browse():
 @app.route('/browse/package/<package>')
 @app.route('/browse/package/@<scope>/<package>')
 def package(package, scope=None):
-  package = Package.objects(name=pjoin(scope, package)).first()
+  package = Package.objects(name=str(refstring.Package(scope, package))).first()
   if not package:
     abort(404)
   return render_template('registry/browse/package.html',
@@ -55,7 +51,7 @@ def package(package, scope=None):
 @app.route('/browse/package/<package>/<version>')
 @app.route('/browse/package/@<scope>/<package>/<version>')
 def package_version(package, version, scope=None):
-  package = Package.objects(name=pjoin(scope, package)).first()
+  package = Package.objects(name=str(refstring.Package(scope, package))).first()
   if not package:
     abort(404)
   version = PackageVersion.objects(package=package, version=version).first()

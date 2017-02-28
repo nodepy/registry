@@ -68,14 +68,11 @@ def bad_request(description):
 def service_unavailable(description):
   return _error('Serice unavailable', description, 503)
 
-def pjoin(scope, package):
-  return refstring.join(scope=scope, name=package)
-
 
 class FindPackage(Resource):
 
   def get(self, package, version, scope=None):
-    package = pjoin(scope, package)
+    package = str(refstring.Package(scope, package))
     try:
       version = semver.Selector(version)
     except ValueError as exc:
@@ -109,7 +106,7 @@ class Download(Resource):
   """
 
   def get(self, package, version, filename, scope=None):
-    package = pjoin(scope, package)
+    package = str(refstring.Package(scope, package))
     directory = os.path.join(config['registry.prefix'], package, version)
     directory = os.path.normpath(os.path.abspath(directory))
     return flask.send_from_directory(directory, filename)

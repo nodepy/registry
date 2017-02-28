@@ -4,11 +4,17 @@
   <table class="package-table">
     <tr>
       <th>Package</th>
+      <th>Version</th>
+      <th>Description</th>
+      <th>License</th>
       <th>Owner</th>
     </tr>
     {% for pkg in Package.objects().all() %}
     <tr>
       <td><a href="{{ url_for('package', package=pkg.name) }}">{{ pkg.name }}</a></td>
+      <td>{{ pkg.latest.version if pkg.latest else '' }}</td>
+      <td>{{ pkg.latest.manifest.description if pkg.latest else '' }}</td>
+      <td>{{ pkg.latest.manifest.license if pkg.latest else '' }}</td>
       <td><a href="{{ url_for('user', user=pkg.owner.name) }}">{{ pkg.owner.name }}</a></td>
     </tr>
     {% endfor %}
