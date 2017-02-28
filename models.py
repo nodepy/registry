@@ -32,13 +32,13 @@ semver = require('@ppym/semver')
 # Note: if you experience extremly long load times, it might be because
 # the mongo host can not be reached.
 # TODO: Find out whether there is a timeout setting for connect().
-connect(
+db = connect(
   db = config['registry.mongodb.db'],
   host = config['registry.mongodb.host'],
   port = int(config['registry.mongodb.port']),
   username = config['registry.mongodb.username'],
   password = config['registry.mongodb.password']
-)
+)[config['registry.mongodb.db']]
 
 
 class User(Document):
@@ -47,7 +47,8 @@ class User(Document):
   email = StringField(required=True, min_length=4, max_length=54)
   created = DateTimeField(default=datetime.now)
   validation_token = StringField()
-  validated = BooleanField()
+  validated = BooleanField(default=False)
+  superuser = BooleanField(default=False)
 
   def send_validation_mail(self):
     """
@@ -104,5 +105,35 @@ class PackageVersion(Document):
       self.files.append(filename)
 
 
+class MigrationRevision(Document):
+  """
+  Stores a single entity, that is the revision number of the database.
+  """
+
+  revision = IntField()
+
+  @staticmethod
+  def get():
+    obj = MigrationRevision.objects().first()
+    if obj is not None:
+      return obj.revision
+    return 0
+
+  @staticmethod
+  def set(revision):
+    obj = MigrationRevision.objects().first()
+    if not obj:
+      obj = MigrationRevision(revision)
+    else:
+      obj.revision = revision
+    obj.save()
+    assert MigrationRevision.get() == revision
+
+
 def hash_password(password):
   return sha512(password.encode('utf8')).hexdigest()
+
+
+
+CURRENT_REVISION = MigrationRevision.get()
+TARGET_REVISION = 1  # Current revision number of our models.

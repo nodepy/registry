@@ -39,6 +39,13 @@ def cli():
 @click.option('--debug/--no-debug', default=None)
 @click.option('--prefix')
 def run(host, port, debug, prefix):
+  if models.CURRENT_REVISION != models.TARGET_REVISION:
+    print('error: database not upgraded. The current revision is {} but '
+        'we expected revision {}'.format(models.CURRENT_REVISION,
+          models.TARGET_REVISION))
+    print('error: use \'ppy-registry migrate\' to upgrade the database')
+    return
+
   if host is None:
     host = config['registry.host']
   if port is None:
@@ -107,6 +114,21 @@ def adduser(username, password, email):
   user = models.User(username, models.hash_password(password), email)
   user.save()
   print('User created.')
+
+
+@cli.command()
+@click.option('-d', '--dry', is_flag=True)
+def migrate(dry):
+  """
+  Use after an update to upgrade the database.
+  """
+
+  migrate = require('./migrate').Migration(models.db,
+      models.CURRENT_REVISION, models.TARGET_REVISION,
+      os.path.join(_dirname, 'migrations'), dry=dry)
+  migrate.execute()
+  if not dry:
+    models.MigrationRevision.set(models.TARGET_REVISION)
 
 
 if require.is_main:
