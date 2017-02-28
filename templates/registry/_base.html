@@ -47,10 +47,11 @@
       <div>
         <span style="color: white">Copyright &copy; Niklas Rosenstein 2017</span> |
         <a href="{{ url_for('terms') }}" style="color: inherit">Terms of Use</a>
+        <span style="float: right"><code>@ppym/registry@{{ __version__ }}</code></span>
         {% if config['registry.accept_registrations'] != 'true' %}
-          <span style="float: right"><b>Note:</b> New registrations are disabled.</span>
+          <span style="float: right; margin-right: 1em"><b>Note:</b> New registrations are disabled.</span>
         {% endif %}
-        </div>
+      </div>
     </footer>
   </body>
 </html>
