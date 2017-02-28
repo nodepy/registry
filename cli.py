@@ -94,7 +94,9 @@ def testmail(from_, to):
 @click.option('-u', '--username')
 @click.option('-p', '--password')
 @click.option('-e', '--email')
-def adduser(username, password, email):
+@click.option('--superuser', is_flag=True)
+@click.option('--verified', is_flag=True)
+def adduser(username, password, email, superuser, verified):
   if not username:
     username = input('Username? ')
   if not password:
@@ -111,7 +113,8 @@ def adduser(username, password, email):
     print('Email {} already in use'.format(email))
     return 1
 
-  user = models.User(username, models.hash_password(password), email)
+  user = models.User(username, models.hash_password(password), email,
+      superuser=superuser, validated=verified)
   user.save()
   print('User created.')
 

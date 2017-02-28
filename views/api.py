@@ -120,9 +120,9 @@ class Upload(Resource):
   @httpauth.login_required
   @decorators.finally_(True)
   def post(self, finally_, package, version, scope=None):
-    package = pjoin(scope, package)
     try:
-      refstring.parse_package(package)
+      # Just make sure the scope and package are valid.
+      package = refstring.Package(scope, package)
       version = semver.Version(version)
     except ValueError:
       flask.abort(404)
@@ -135,8 +135,13 @@ class Upload(Resource):
     if not user.validated:
       return email_not_verified(user)
 
+    if config['registry.enforce_user_namespaces'] == 'true' \
+        and package.scope != user.name and not user.superuser:
+      return bad_request('You can only upload packages into your own namespace. '
+        ' Rename your package to "@{}/{}"'.format(user.name, package.name))
+
     # Find the package information in our database.
-    pkg = Package.objects(name=package).first()
+    pkg = Package.objects(name=str(package)).first()
     if pkg and pkg.owner != user:
       return unauthorized_access(user, pkg)
     pkgversion = PackageVersion.objects(package=pkg, version=str(version)).first()
@@ -149,7 +154,7 @@ class Upload(Resource):
       return bad_request('"package.json" can not be uploaded directly')
 
     # Get the directory and filename to upload the file to.
-    directory = os.path.join(config['registry.prefix'], package, str(version))
+    directory = os.path.join(config['registry.prefix'], str(package), str(version))
     absfile = os.path.join(directory, filename)
 
     # Check if the upload should be forced even if the file already exists.
@@ -188,7 +193,7 @@ class Upload(Resource):
       if not pkgmf.license:
         return bad_request('Packages uploaded to the registry must specify '
             'the `license` field.')
-      if pkgmf.name != package or pkgmf.version != version:
+      if pkgmf.name != str(package) or pkgmf.version != version:
         return bad_request('The uploaded package distribution achive does '
             'not match with the target version. You are trying to uploaded '
             'the archive to "{}@{}" but the manifest says it is actually '
@@ -204,7 +209,7 @@ class Upload(Resource):
       # database.
       if not pkg:
         replies.append('Added package "{}" to user "{}"'.format(package, user.name))
-        pkg = Package(name=package, owner=user)
+        pkg = Package(name=str(package), owner=user)
         pkg.save()
 
       # Same for the version.

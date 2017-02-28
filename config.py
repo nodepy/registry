@@ -36,7 +36,8 @@ config.defaults.update({
   'registry.email.origin': 'no-reply@${registry.visible.host}',
   'registry.email.smtp_host': 'localhost:25',
   'registry.email.smtp_ssl': 'false',
-  'registry.email.require_verification': 'false'
+  'registry.email.require_verification': 'false',
+  'registry.enforce_user_namespaces': 'true'
 })
 
 config['registry.prefix'] = os.path.expanduser(config['registry.prefix'])

@@ -13,7 +13,8 @@
   "dependencies": {
     "@ppym/manifest": "~0.0.1",
     "@ppym/ppym": "~0.0.1",
-    "@ppym/semver": "~0.0.1"
+    "@ppym/semver": "~0.0.1",
+    "@ppym/refstring": "~0.0.2"
   },
   "python-dependencies": {
     "Flask": "==0.12",
