@@ -19,6 +19,7 @@
 # THE SOFTWARE.
 
 import flask
+import os
 import uuid
 
 from datetime import datetime
@@ -91,6 +92,9 @@ class Package(Document):
       if save:
         self.save()
 
+  def get_directory(self):
+    return os.path.join(config['registry.prefix'], self.name)
+
 
 class PackageVersion(Document):
   package = ReferenceField('Package', CASCADE)
@@ -103,6 +107,16 @@ class PackageVersion(Document):
   def add_file(self, filename):
     if filename not in self.files:
       self.files.append(filename)
+
+  def get_directory(self):
+    return os.path.join(self.package.get_directory(), self.version)
+
+  def get_file_path(self, filename):
+    return os.path.join(self.get_directory(), filename)
+
+  def get_file_size(self, filename):
+    path = self.get_file_path(filename)
+    return os.path.getsize(path)
 
 
 class MigrationRevision(Document):

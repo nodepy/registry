@@ -13,24 +13,27 @@
 {% endblock %}
 {% block body %}
   <header class="blue">
-    <nav>
+    <nav class="nav-extended">
       <div class="nav-wrapper blue">
-        <ul id="nav-mobile" class="left hide-on-med-and-down">
-          <li {{ active(nav, 'index') }}><a href="{{ url_for('index') }}"><i class="material-icons left">home</i> ppym</a></li>
-          <li {{ active(nav, 'browse') }}><a href="{{ url_for('browse') }}"><i class="material-icons left">view_module</i> Browse Packages</a></li>
-          {% if nav_title %}
-            <li class="active"><a><i class="material-icons left">receipt</i> {{ nav_title }}</a></li>
-          {% endif %}
-        </ul>
+        <div class="container">
+          <ul id="nav-mobile" class="left hide-on-med-and-down">
+            <li {{ active(nav, 'index') }}><a href="{{ url_for('index') }}"><i class="material-icons left">home</i> ppym</a></li>
+            <li {{ active(nav, 'browse') }}><a href="{{ url_for('browse') }}"><i class="material-icons left">view_module</i> Browse Packages</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="nav-content blue lighten-1">
+        <div class="container">
+          {% block nav_content %}
+          {% endblock %}
+        </div>
       </div>
     </nav>
   </header>
   <main>
     <div class="container">
-      <div class="row">
-        {% block content %}
-        {% endblock %}
-      </div>
+      {% block content %}
+      {% endblock %}
     </div>
   </main>
   <footer class="page-footer blue">

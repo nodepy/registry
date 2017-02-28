@@ -20,8 +20,10 @@
 
 import flask
 import jinja2
+import json
 import markdown
 import os
+import urllib
 
 manifest = require('@ppym/manifest')
 models = require('./models')
@@ -39,13 +41,16 @@ app.jinja_env.globals.update({
   'Package': models.Package,
   'PackageVersion': models.PackageVersion,
   'resources': resources,
-  'config': require('./config')
+  'config': require('./config'),
+  'jsonfmt': json.dumps,
+  'urlparse': urllib.parse.urlparse
 })
 
 app.jinja_env.filters.update({
   'markdown': markdown.Markdown(
       extensions=['extra', 'codehilite']
   ).convert,
+  'sizeof_fmt': require('./utils').sizeof_fmt
 })
 
 exports = app
