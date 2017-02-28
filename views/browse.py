@@ -40,33 +40,33 @@ def browse():
 
 @app.route('/browse/package/<package>')
 @app.route('/browse/package/@<scope>/<package>')
-def package(package, scope=None):
-  package = Package.objects(name=str(refstring.Package(scope, package))).first()
-  if not package:
-    abort(404)
-  return render_template('registry/browse/package.html',
-      package=package, version=package.latest, nav_title=package.name)
-
-
 @app.route('/browse/package/<package>/<version>')
 @app.route('/browse/package/@<scope>/<package>/<version>')
-def package_version(package, version, scope=None):
+def package(package, scope=None, version=None):
   package = Package.objects(name=str(refstring.Package(scope, package))).first()
   if not package:
     abort(404)
-  version = PackageVersion.objects(package=package, version=version).first()
-  if not version:
-    abort(404)
+  if version:
+    version = PackageVersion.objects(package=package, version=version).first()
+    if not version:
+      abort(404)
+  else:
+    version = package.latest
   return render_template('registry/browse/package.html',
-      package=package, version=version, nav_title='{}@{}'.format(package.name, version.version))
+      package=package, version=version)
 
 
-@app.route('/browse/user/<user>')
+@app.route('/browse/users')
+def users():
+  return render_template('registry/browse/users.html', nav='users')
+
+
+@app.route('/browse/users/<user>')
 def user(user):
   user = User.objects(name=user).first()
   if not user:
     abort(404)
-  return render_template('registry/browse/user.html', nav='browse', user=user)
+  return render_template('registry/browse/user.html', user=user)
 
 
 @app.route('/email/validate/<token>')

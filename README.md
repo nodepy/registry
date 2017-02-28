@@ -20,7 +20,6 @@ ppy package manager **ppym** to find and download dependencies.
 - [Flask](http://flask.pocoo.org/)
 - [Markdown](https://pypi.python.org/pypi/Markdown)
 - [MongoDB](https://mongodb.com)
-- [Materialize CSS](http://materializecss.com)
 
 ---
 

@@ -1,69 +1,56 @@
-{% extends "materialize.html" %}
-{% block head %}
-  <style>
-  body {
-    display: flex;
-    min-height: 100vh;
-    flex-direction: column;
-  }
-
-  main {
-    flex: 1 0 auto;
-  }</style>
-{% endblock %}
-{% block body %}
-  <header class="blue">
-    <nav class="nav-extended">
-      <div class="nav-wrapper blue">
-        <div class="container">
-          <ul id="nav-mobile" class="left hide-on-med-and-down">
-            <li {{ active(nav, 'index') }}><a href="{{ url_for('index') }}"><i class="material-icons left">home</i> ppym</a></li>
-            <li {{ active(nav, 'browse') }}><a href="{{ url_for('browse') }}"><i class="material-icons left">view_module</i> Browse Packages</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="nav-content blue lighten-1">
-        <div class="container">
-          {% block nav_content %}
-          {% endblock %}
-        </div>
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/css/tether.min.css" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    {% block head %}
+    {% endblock %}
+  </head>
+  <body>
+    <nav class="navbar navbar-toggleable-md navbar-inverse fixed-top bg-inverse">
+      <button class="navbar-toggler navbar-toggler-right hidden-lg-up collapsed" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <a class="navbar-brand" href="#">PPYM</a>
+      <div class="navbar-collapse collapse" id="navbarsExampleDefault" aria-expanded="false">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item {{ 'active' if nav=='index' else '' }}">
+            <a class="nav-link" href="{{ url_for('index') }}">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item {{ 'active' if nav=='browse' else '' }}">
+            <a class="nav-link" href="{{ url_for('browse') }}">Browse Packages</a>
+          </li>
+          <li class="nav-item {{ 'active' if nav=='users' else '' }}">
+            <a class="nav-link" href="{{ url_for('users') }}">Users</a>
+          </li>
+        </ul>
       </div>
     </nav>
-  </header>
-  <main>
-    <div class="container">
-      {% block content %}
-      {% endblock %}
-    </div>
-  </main>
-  <footer class="page-footer blue">
-    <div class="container">
+    <div class="container-fluid">
       <div class="row">
-        <div class="col l4 s12">
-          <h5 class="white-text">Links</h5>
-          <ul>
-            <li><a class="grey-text text-lighten-3" href="https://github.com/ppym/engine">ppy</a></li>
-            <li><a class="grey-text text-lighten-3" href="http://flask.pocoo.org/">Flask</a></li>
-            <li><a class="grey-text text-lighten-3" href="https://www.mongodb.com/">MongoDB</a></li>
-            <li><a class="grey-text text-lighten-3" href="http://materializecss.com/">Materialize CSS</a></li>
-          </ul>
-        </div>
-        <div class="col l4 offset-l2 s12">
-          <h5 class="white-text">Legal Stuff</h5>
-          <ul>
-            <li><a class="grey-text text-lighten-3" href="{{ url_for('terms') }}">Terms of Use</a></li>
-          </ul>
-          {% if config['registry.accept_registrations'] != 'true' %}
-            <blockquote><p class="white-text"><b>Note:</b> New registrations are disabled.</p></blockquote>
-          {% endif %}
-        </div>
+        <nav class="col-sm-3 col-md-2 hidden-xs-down bg-faded sidebar">
+          {% block sidebar %}
+          {% endblock %}
+        </nav>
+        <main class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
+          {% block content %}
+          {% endblock %}
+        </main>
       </div>
     </div>
-    <div class="footer-copyright">
-      <div class="container">
-        &copy; Copyright 2017 Niklas Rosenstein
-        <a class="grey-text text-lighten-4 right" href="https://github.com/ppym/registry">@ppym/registry@{{ __version__ }}</a>
-      </div>
-    </div>
-  </footer>
-{% endblock %}
+    <footer class="navbar navbar-inverse bg-inverse fixed-bottom" style="color: white">
+      <div>
+        <span style="color: white">Copyright &copy; Niklas Rosenstein 2017</span> |
+        <a href="{{ url_for('terms') }}" style="color: inherit">Terms of Use</a>
+        {% if config['registry.accept_registrations'] != 'true' %}
+          <span style="float: right"><b>Note:</b> New registrations are disabled.</span>
+        {% endif %}
+        </div>
+    </footer>
+  </body>
+</html>

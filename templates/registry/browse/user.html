@@ -1,21 +1,26 @@
 {% extends "registry/_base.html" %}
 {% block content %}
-  <h1><span>User</span> {{ user.name }}</h1>
-  <h3>Packages</h3>
-  <table class="package-table">
-    <tr>
-      <th>Package</th>
-      <th>Version</th>
-      <th>Description</th>
-      <th>License</th>
-    </tr>
-    {% for pkg in Package.objects(owner=user).all() %}
-    <tr>
-      <td><a href="{{ url_for('package', package=pkg.name) }}">{{ pkg.name }}</a></td>
-      <td>{{ pkg.latest.version if pkg.latest else '' }}</td>
-      <td>{{ pkg.latest.manifest.description if pkg.latest else '' }}</td>
-      <td>{{ pkg.latest.manifest.license if pkg.latest else '' }}</td>
-    </tr>
-    {% endfor %}
-  </table>
+  <h1>{{ user.name }}</h1>
+  <div id="packages">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Package</th>
+          <th>Version</th>
+          <th>Description</th>
+          <th>License</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for pkg in Package.objects(owner=user).all() %}
+          <tr>
+            <td><a href="{{ url_for('package', package=pkg.name) }}">{{ pkg.name }}</a></td>
+            <td>{{ pkg.latest.version if pkg.latest else '' }}</td>
+            <td>{{ pkg.latest.manifest.description if pkg.latest else '' }}</td>
+            <td>{{ pkg.latest.manifest.license if pkg.latest else '' }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 {% endblock %}

@@ -77,6 +77,9 @@ class User(Document):
     res += flask.url_for('validate_email', token=self.validation_token)
     return res
 
+  def get_url(self):
+    return flask.url_for('user', user=self.name)
+
 
 class Package(Document):
   name = StringField(required=True, unique=True)
@@ -94,6 +97,9 @@ class Package(Document):
 
   def get_directory(self):
     return os.path.join(config['registry.prefix'], self.name)
+
+  def get_url(self):
+    return flask.url_for('package', package=self.package.name)
 
 
 class PackageVersion(Document):
@@ -116,7 +122,13 @@ class PackageVersion(Document):
 
   def get_file_size(self, filename):
     path = self.get_file_path(filename)
-    return os.path.getsize(path)
+    try:
+      return os.path.getsize(path)
+    except FileNotFoundError:
+      return 0
+
+  def get_url(self):
+    return flask.url_for('package', package=self.package.name, version=self.version)
 
 
 class MigrationRevision(Document):
