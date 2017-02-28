@@ -267,6 +267,10 @@ class Register(Resource):
       return bad_request('Email "{}" is already in use'.format(email))
     # TODO: Validate that `email` is a valid email address.
 
+    if config['registry.accept_registrations'] != 'true':
+      return bad_request('New user registrations are currently not accepted. '
+          'Talk to the registry admin to manually create an account for you.')
+
     # Create the new user object.
     user = User(name=username, passhash=models.hash_password(password),
         email=email, validation_token=None, validated=False)
