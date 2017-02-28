@@ -30,7 +30,7 @@
     <li class="nav-item">
       <hr/>
     </li>
-    {% if version %}
+    {% if version and version.manifest.repository %}
       <li class="nav-item">
         <a href="{{ version.manifest.repository }}" class="nav-link">Repository</a>
       </li>
