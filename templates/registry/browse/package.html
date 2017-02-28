@@ -1,4 +1,7 @@
 {% extends "registry/_base.html" %}
+{% block head %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='codehilite.css') }}">
+{% endblock %}
 {% block content %}
   <p>
     Package <a href="{{ url_for('package', package=package.name) }}">{{ package.name }}</a>

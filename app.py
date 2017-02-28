@@ -42,7 +42,9 @@ app.jinja_env.globals.update({
 })
 
 app.jinja_env.filters.update({
-  'markdown': markdown.markdown,
+  'markdown': markdown.Markdown(
+      extensions=['extra', 'codehilite']
+  ).convert,
 })
 
 exports = app
