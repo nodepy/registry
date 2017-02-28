@@ -24,6 +24,7 @@ import os
 config = require('./config')
 app = require('./app')
 models = require('./models')
+email = require('./email')
 require('./views/api')
 require('./views/browse')
 
