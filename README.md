@@ -1,13 +1,29 @@
+<img src="http://i.imgur.com/Q4jjufa.png" align="left" style="margin-right: 1em;"></img>*
 # @ppym/registry
 
-This is the [ppy] package registry server. If you're looking for the registry
-client to install packages, look here at [ppym/ppym][ppym].
+*Build Python applications the Node way.*
+
+**[ppy]** is kind of a Node.js clone: An engine based on Python that lays the
+foundation for loading Python modules resolved from actual filenames with a
+`require()` function.
+
+This is the **ppy package registry** which stores packages and allows the
+ppy package manager **ppym** to find and download dependencies.
 
   [ppy]: https://github.com/ppym/engine
-  [ppym]: https://github.com/ppym/ppym
 
-__Technologies__
+## Technologies
 
-- PPY
-- Flask
-- MongoDB
+`@ppym/registry` is built on the following techonologies:
+
+- [ppy]
+- [Flask](http://flask.pocoo.org/)
+- [Markdown](https://pypi.python.org/pypi/Markdown)
+- [MongoDB](https://mongodb.com)
+- [Materialize CSS](http://materializecss.com)
+
+---
+
+<sub>\* Original image from http://www.rcsinnovations.com/wp-content/uploads/2012/09/Popeye1.gif.
+If anyone can find or make a similar image of PopPey with specific information on copyright and
+license, that would be great.</sub>
