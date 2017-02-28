@@ -83,5 +83,31 @@ def testmail(from_, to):
   s.quit()
 
 
+@cli.command()
+@click.option('-u', '--username')
+@click.option('-p', '--password')
+@click.option('-e', '--email')
+def adduser(username, password, email):
+  if not username:
+    username = input('Username? ')
+  if not password:
+    password = input('Password? ')
+    if input('Confirm Password? ') != password:
+      print('passwords do not match')
+  if not email:
+    email = input('Email? ')
+
+  if models.User.objects(name=username).first():
+    print('User {} already exists'.format(username))
+    return 1
+  if models.User.objects(email=email).first():
+    print('Email {} already in use'.format(email))
+    return 1
+
+  user = models.User(username, models.hash_password(password), email)
+  user.save()
+  print('User created.')
+
+
 if require.is_main:
   cli()
