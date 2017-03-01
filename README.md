@@ -1,28 +1,39 @@
-<img src="http://i.imgur.com/Q4jjufa.png" align="left" style="margin-right: 1em;"></img>*
+<img src="http://i.imgur.com/W3652bU.png" align="right"></img>
 # @ppym/registry
 
-*Build Python applications the Node way.*
-
-**[ppy]** is kind of a Node.js clone: An engine based on Python that lays the
-foundation for loading Python modules resolved from actual filenames with a
-`require()` function.
-
-This is the **ppy package registry** which stores packages and allows the
-ppy package manager **ppym** to find and download dependencies.
+This is the PPYM registry server which is built entirely on [Ppy]. It is
+deployed on [ppym.org], which serves as the default Ppy registry. Ppy and
+the Ppy registry are currently in alpha development and are considered
+unstable. For more information on Ppy, check out the [@ppym/engine][ppy]
+repository.
 
   [ppy]: https://github.com/ppym/engine
+  [ppym.org]: https://ppym.org
 
-## Technologies
+__Requirements__
 
-`@ppym/registry` is built on the following techonologies:
+- [Ppy] on Python 3.5 or newer
+- MongoDB
 
-- [ppy]
-- [Flask](http://flask.pocoo.org/)
-- [Markdown](https://pypi.python.org/pypi/Markdown)
-- [MongoDB](https://mongodb.com)
+__Deployment__
 
----
+Clone the repository and install the `@ppym/registry` package in develop mode.
+This will install all dependencies into a `ppy_modules/` directory, including
+the standard Python modules. After that, you can run the server.
 
-<sub>\* Original image from http://www.rcsinnovations.com/wp-content/uploads/2012/09/Popeye1.gif.
-If anyone can find or make a similar image of PopPey with specific information on copyright and
-license, that would be great.</sub>
+There are a number of configuration values that can be defined in the
+`~/.ppyrc` file. Check out the `config.py` file in this repository for the
+available values and their default values.
+
+    $ git clone https://github.com/ppym/registry.git ppy-registry
+    $ cd ppy-registry
+    $ ppym install -e .
+    $ ppy_modules/.bin/ppy-registry run
+
+__Todo__
+
+- Test sending of emails (for user email verification)
+- Frontend search functionality
+- Command-line to update existing users (eg. promote them to superusers)
+- User management API (change of password, email, etc. for the `ppym`
+  command-line).
