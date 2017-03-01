@@ -18,40 +18,27 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-import flask
-import jinja2
-import json
-import markdown
+from flask import abort, request, render_template
 import os
-import urllib
+import mkdocs.toc
 
-manifest = require('@ppym/manifest')
-models = require('./models')
-resources = require('./resources')
-utils = require('./utils')
-markdown = require('./markdown')
+app = require('../app')
+markdown = require('../markdown')
+docs_dir = os.path.join(os.path.dirname(_dirname), 'docs')
 
 
-app = flask.Flask('ppy-registry')
-app.config['TEMPLATES_AUTO_RELOAD'] = True
+@app.route('/docs')
+@app.route('/docs/<page>')
+def docs(page='index'):
+  # TODO: Disallow ../ parts in the page path.
+  path = os.path.join(docs_dir, page + '.md')
+  print(path)
+  if not os.path.isfile(path):
+    abort(404)
 
-# Initialize the Jinja environment globals and filters..
-app.jinja_env.globals.update({
-  '__version__': str(manifest.parse(os.path.join(_dirname, 'package.json')).version),
-  'active': lambda v, x: jinja2.Markup('class="active"') if v == x else '',
-  'User': models.User,
-  'Package': models.Package,
-  'PackageVersion': models.PackageVersion,
-  'resources': resources,
-  'config': require('./config'),
-  'jsonfmt': json.dumps,
-  'urlparse': urllib.parse.urlparse,
-  'url_for': utils.url_for
-})
-
-app.jinja_env.filters.update({
-  'markdown': lambda x: markdown().convert(x),
-  'sizeof_fmt': utils.sizeof_fmt
-})
-
-exports = app
+  md = markdown()
+  with open(path) as fp:
+    content = md.convert(fp.read())
+  toc = mkdocs.toc.TableOfContents(md.toc)
+  return render_template('registry/docs.html',
+      nav='docs', content=content, toc=toc)

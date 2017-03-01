@@ -8,6 +8,13 @@ h1 {
   padding-bottom: 9px;
   border-bottom: 1px solid #eee;
 }
+:target:before {
+  /* Offset for the header when jumping to a target. */
+  content: "";
+  display: block;
+  height: 60px; /* fixed header height*/
+  margin: -60px 0 0; /* negative fixed header height */
+}
 
 .sidebar {
   position: fixed;

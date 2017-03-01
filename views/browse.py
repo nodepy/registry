@@ -83,7 +83,7 @@ def validate_email(token=None):
 
 @app.route('/terms')
 def terms():
-  return render_template('registry/terms.html')
+  return render_template('registry/terms.html', nav='terms')
 
 
 @app.errorhandler(404)

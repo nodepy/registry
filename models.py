@@ -38,7 +38,7 @@ db = connect(
   host = config['registry.mongodb.host'],
   port = int(config['registry.mongodb.port']),
   username = config['registry.mongodb.username'],
-  password = config['registry.mongodb.password']
+  password = config['registry.mongodb.password'],
 )[config['registry.mongodb.db']]
 
 

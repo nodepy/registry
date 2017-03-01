@@ -1,0 +1,21 @@
+{% extends "registry/_base.html" %}
+
+{% macro render_sidebar(anchor, depth=0) %}
+  <li class="nav-item">
+    <a href="{{ anchor.url }}" class="nav-link">{{ anchor.title|safe }}</a>
+  </li>
+  {% for sub in anchor.children %}
+    {{ render_sidebar(sub, depth+1) }}
+  {% endfor %}
+{% endmacro %}
+
+{% block sidebar %}
+  <ul class="nav nav-pills flex-column">
+    {% for anchor in toc.items %}
+      {{ render_sidebar(anchor) }}
+    {% endfor %}
+  </ul>
+{% endblock %}
+{% block content %}
+  {{ content|safe }}
+{% endblock %}

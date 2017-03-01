@@ -27,6 +27,7 @@ models = require('./models')
 email = require('./email')
 require('./views/api')
 require('./views/browse')
+require('./views/docs')
 
 
 @click.group()
