@@ -28,7 +28,7 @@ from mongoengine import *
 
 config = require('./config')
 email = require('./email')
-semver = require('@ppym/semver')
+semver = require('ppym/lib/semver')
 
 # Note: if you experience extremly long load times, it might be because
 # the mongo host can not be reached.

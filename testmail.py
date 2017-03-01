@@ -18,40 +18,24 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-import flask
-import jinja2
-import json
-import markdown
+import click
 import os
-import urllib
 
-manifest = require('ppym/lib/manifest')
-models = require('./models')
-resources = require('./resources')
-utils = require('./utils')
-markdown = require('./markdown')
+email = require('./email')
 
 
-app = flask.Flask('ppy-registry')
-app.config['TEMPLATES_AUTO_RELOAD'] = True
+@click.command()
+@click.argument('from_', 'from')
+@click.argument('to')
+def main(from_, to):
+  part = email.MIMEText('This is a test email')
+  part['From'] = from_
+  part['To'] = to
+  part['Subject'] = 'Test email'
+  s = email.make_smtp()
+  s.sendmail(from_, [to], part.as_string())
+  s.quit()
 
-# Initialize the Jinja environment globals and filters..
-app.jinja_env.globals.update({
-  '__version__': str(manifest.parse(os.path.join(__directory__, 'package.json')).version),
-  'active': lambda v, x: jinja2.Markup('class="active"') if v == x else '',
-  'User': models.User,
-  'Package': models.Package,
-  'PackageVersion': models.PackageVersion,
-  'resources': resources,
-  'config': require('./config'),
-  'jsonfmt': json.dumps,
-  'urlparse': urllib.parse.urlparse,
-  'url_for': utils.url_for
-})
 
-app.jinja_env.filters.update({
-  'markdown': lambda x: markdown().convert(x),
-  'sizeof_fmt': utils.sizeof_fmt
-})
-
-exports = app
+if require.main == module:
+  main()

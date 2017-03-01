@@ -22,7 +22,7 @@ from flask import abort, request, render_template
 
 app = require('../app')
 models = require('../models')
-refstring = require('@ppym/refstring')
+refstring = require('ppym/lib/refstring')
 
 User, Package, PackageVersion = models.User, \
     models.Package, models.PackageVersion

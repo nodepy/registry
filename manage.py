@@ -19,52 +19,12 @@
 # THE SOFTWARE.
 
 import click
-import os
 
-config = require('./config')
-app = require('./app')
 models = require('./models')
-email = require('./email')
-require('./views/api')
-require('./views/browse')
-require('./views/docs')
 
 
-@click.group()
-def cli():
-  pass
-
-
-@cli.command()
-@click.option('-h', '--host')
-@click.option('-p', '--port', type=int)
-@click.option('--debug/--no-debug', default=None)
-@click.option('--prefix')
-def run(host, port, debug, prefix):
-  if models.CURRENT_REVISION != models.TARGET_REVISION:
-    print('error: database not upgraded. The current revision is {} but '
-        'we expected revision {}'.format(models.CURRENT_REVISION,
-          models.TARGET_REVISION))
-    print('error: use \'ppy-registry migrate\' to upgrade the database')
-    return
-
-  if host is None:
-    host = config['registry.host']
-  if port is None:
-    port = int(os.getenv('', int(config['registry.port'])))
-  if debug is None:
-    debug = (config['registry.debug'].lower().strip() == 'true')
-  if prefix is not None:
-    config['registry.prefix'] = prefix
-
-  if debug:
-    # TODO: Support Werkzeug livereloader in ppy environments.
-    #       See ppym/engine#6.
-    print('note: Unfortunately, Flask debug mode (specifically livereload) '
-        'is currently not supported in ppy environments.')
-    debug = False
-
-  app.run(host=host, port=port, debug=debug)
+@click.command()
+def main(): pass
 
 
 @cli.command()
@@ -77,19 +37,6 @@ def drop():
     models.PackageVersion.drop_collection()
   else:
     print('Better so.')
-
-
-@cli.command()
-@click.argument('from_', 'from')
-@click.argument('to')
-def testmail(from_, to):
-  part = email.MIMEText('This is a test email')
-  part['From'] = from_
-  part['To'] = to
-  part['Subject'] = 'Test email'
-  s = email.make_smtp()
-  s.sendmail(from_, [to], part.as_string())
-  s.quit()
 
 
 @cli.command()
@@ -130,11 +77,7 @@ def migrate(dry):
 
   migrate = require('./migrate').Migration(models.db,
       models.CURRENT_REVISION, models.TARGET_REVISION,
-      os.path.join(_dirname, 'migrations'), dry=dry)
+      os.path.join(__directory__, 'migrations'), dry=dry)
   migrate.execute()
   if not dry:
     models.MigrationRevision.set(models.TARGET_REVISION)
-
-
-if require.is_main:
-  cli()

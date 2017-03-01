@@ -20,7 +20,7 @@
 
 import os
 
-config = require.session.config
+config = require('ppym/lib/config')
 config.defaults.update({
   'registry.host': 'localhost',
   'registry.port': '8000',

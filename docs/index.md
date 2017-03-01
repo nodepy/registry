@@ -1,15 +1,9 @@
-Title: PPYM documentation
-Summary: Documentation of Ppy and the Ppy Package Manager
-Authors: Niklas Rosenstein
-Date: March 1, 2017
+<img src="https://i.imgur.com/CdzJiFi.png" align="right" width="150px"></img>
+# Node.py Packaging Documentation
 
-<img src="https://i.imgur.com/W3652bU.png" align="right"></img>
-# PPYM Documentation
+PPYM is the [Node.py] package manager.
 
-PPYM is the package manager that comes pre-installed with [Ppy].
-
-  [Ppy]: https://github.com/ppym/engine
-
+  [Node.py]: https://github.com/nodepy/nodepy
 
 ## Command-line Interface
 
@@ -20,15 +14,15 @@ Initialize a `package.json` file in the current working directory.
 ### `ppym dist`
 
 Create a `.tar.gz` archive from your package that can be uploaded to the
-Ppy registry with [`ppym upload`](#ppym-upload).
+PPYM registry with [`ppym upload`](#ppym-upload).
 
 ### `ppym register`
 
-Register a new account on the Ppy registry. Note that you can change the
-URL to the registry being used in the `~/.ppyrc` file. By default, it will
+Register a new account on the PPYM registry. Note that you can change the
+URL to the registry being used in the `~/.ppymrc` file. By default, it will
 point to https://ppym.org.
 
-    $ craftr ~/.ppyrc
+    $ craftr ~/.ppymrc
     registry=http://localhost:8000
 
 ### `ppym upload`
@@ -65,8 +59,8 @@ uploading any content to the registry.**
 
 Installs a package (2, 3, 4) or the dependencies of the current package (1)
 locally or globally (`-g, --global`). Local packages are installed into the
-`ppy_modules/` directory. Scripts are placed into `ppy_modules/.bin/`, Python
-modules installed via Pip are installed into `ppy_modules/.pymodules`.
+`nodepy_modules/` directory. Scripts are placed into `nodepy_modules/.bin/`,
+Python modules installed via Pip are installed into `nodepy_modules/.pymodules`.
 
 ### `ppym uninstall`
 

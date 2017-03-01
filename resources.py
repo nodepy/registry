@@ -22,7 +22,7 @@ import os
 
 
 def resolve(filename):
-  return os.path.join(_dirname, 'resources', filename)
+  return os.path.join(__directory__, 'resources', filename)
 
 
 def load(filename):

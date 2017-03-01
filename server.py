@@ -18,40 +18,37 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-import flask
-import jinja2
-import json
-import markdown
 import os
-import urllib
+import sys
 
-manifest = require('ppym/lib/manifest')
+config = require('./config')
 models = require('./models')
-resources = require('./resources')
-utils = require('./utils')
-markdown = require('./markdown')
+app = require('./app')
+require('./views/api')
+require('./views/browse')
+require('./views/docs')
 
 
-app = flask.Flask('ppy-registry')
-app.config['TEMPLATES_AUTO_RELOAD'] = True
+def main():
+  if models.CURRENT_REVISION != models.TARGET_REVISION:
+    print('error: database not upgraded. The current revision is {} but '
+        'we expected revision {}'.format(models.CURRENT_REVISION,
+          models.TARGET_REVISION))
+    print('error: use \'ppy-registry migrate\' to upgrade the database')
+    sys.exit(1)
 
-# Initialize the Jinja environment globals and filters..
-app.jinja_env.globals.update({
-  '__version__': str(manifest.parse(os.path.join(__directory__, 'package.json')).version),
-  'active': lambda v, x: jinja2.Markup('class="active"') if v == x else '',
-  'User': models.User,
-  'Package': models.Package,
-  'PackageVersion': models.PackageVersion,
-  'resources': resources,
-  'config': require('./config'),
-  'jsonfmt': json.dumps,
-  'urlparse': urllib.parse.urlparse,
-  'url_for': utils.url_for
-})
+  host = config['registry.host']
+  port = int(os.getenv('', int(config['registry.port'])))
+  debug = (config['registry.debug'].lower().strip() == 'true')
+  if debug:
+    # TODO: Support Werkzeug livereloader in ppy environments.
+    #       See ppym/engine#6.
+    print('note: Unfortunately, Flask debug mode (specifically livereload) '
+        'is currently not supported in ppy environments.')
+    debug = False
 
-app.jinja_env.filters.update({
-  'markdown': lambda x: markdown().convert(x),
-  'sizeof_fmt': utils.sizeof_fmt
-})
+  app.run(host=host, port=port, debug=debug)
 
-exports = app
+
+if require.main == module:
+  main()

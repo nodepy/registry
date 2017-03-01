@@ -38,10 +38,10 @@ app = require('../app')
 httpauth = require('../httpauth')
 decorators = require('../decorators')
 models = require('../models')
-manifest = require('@ppym/manifest')
-semver = require('@ppym/semver')
-refstring = require('@ppym/refstring')
-registry_client = require('@ppym/ppym/registry')
+manifest = require('ppym/lib/manifest')
+semver = require('ppym/lib/semver')
+refstring = require('ppym/lib/refstring')
+registry_client = require('ppym/lib/registry')
 
 User, Package, PackageVersion = models.User, \
     models.Package, models.PackageVersion

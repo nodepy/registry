@@ -24,7 +24,7 @@ import mkdocs.toc
 
 app = require('../app')
 markdown = require('../markdown')
-docs_dir = os.path.join(os.path.dirname(_dirname), 'docs')
+docs_dir = os.path.join(os.path.dirname(__directory__), 'docs')
 
 
 @app.route('/docs')

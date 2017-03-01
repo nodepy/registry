@@ -1,34 +1,49 @@
-<img src="https://i.imgur.com/W3652bU.png" align="right"></img>
-# @ppym/registry
+<img src="https://i.imgur.com/CdzJiFi.png" align="right" width="150px"></img>
+# PPYM registry
 
-This is the PPYM registry server which is built entirely on [Ppy]. It is
-deployed on [ppym.org], which serves as the default Ppy registry. Ppy and
-the Ppy registry are currently in alpha development and are considered
-unstable. For more information on Ppy, check out the [@ppym/engine][ppy]
-repository.
+This is the PPYM registry server which is built entirely on [Node.py]. It is
+deployed on [ppym.org], which serves as the default PPYM registry. Node.py and
+the PPYM registry are currently in alpha development and are considered
+unstable.
 
-  [ppy]: https://github.com/ppym/engine
+  [Node.py]: https://github.com/nodepy/nodepy
+  [PPYM]: https://github.com/nodepy/ppym
   [ppym.org]: https://ppym.org
 
 __Requirements__
 
-- [Ppy] on Python 3.5 or newer
+- [Node.py] on Python 3.5+
 - MongoDB
 
 __Deployment__
 
-Clone the repository and install the `@ppym/registry` package in develop mode.
-This will install all dependencies into a `ppy_modules/` directory, including
-the standard Python modules. After that, you can run the server.
+Clone the repository and install the dependencies with [PPYM]. To make
+deployment easier, PPYM is included as a Git submodule already.
 
-There are a number of configuration values that can be defined in the
-`~/.ppyrc` file. Check out the `config.py` file in this repository for the
-available values and their default values.
+    $ node.py ppym install
 
-    $ git clone https://github.com/ppym/registry.git ppy-registry
-    $ cd ppy-registry
-    $ ppym install -e .
-    $ ppy_modules/.bin/ppy-registry run
+After the dependencies have been installed, you can start the server.
+
+    $ node.py server
+
+The PPYM registry server has a number of configuration values that can be
+specified in the PPYM configuration file which is usually found at `~/.ppymrc`.
+Check the `lib/config.py` module in this repository for a list of all available
+configuration values.
+
+This is how the PPYM registry is configured on [ppym.org]:
+
+    registry.host=localhost
+    registry.port=5000
+    registry.visible.host=ppym.org
+    registry.visible.url_scheme=https
+    registry.debug=false
+    registry.prefix=~/ppym-registry-data
+    registry.email.origin=no-reply@ppym.org
+    registry.email.smtp_host=localhost:25
+    registry.email.smtp_ssl=true
+    registry.email.require_verification=true
+    registry.accept_registrations=false
 
 __Todo__
 
