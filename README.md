@@ -1,4 +1,4 @@
-<img src="http://i.imgur.com/W3652bU.png" align="right"></img>
+<img src="https://i.imgur.com/W3652bU.png" align="right"></img>
 # @ppym/registry
 
 This is the PPYM registry server which is built entirely on [Ppy]. It is
