@@ -1,8 +1,8 @@
 {
-  "name": "@ppym/registry",
-  "version": "0.0.2-dev",
+  "name": "ppym-registry",
+  "version": "0.0.3",
   "license": "MIT",
-  "description": "The ppy package registry server",
+  "description": "The Node.py Package Registry",
   "main": "cli",
   "bin": {
     "ppy-registry": "cli"
