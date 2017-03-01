@@ -18,6 +18,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+import flask
+
 
 def sizeof_fmt(num, suffix='B'):
   # http://stackoverflow.com/a/1094933/791713
@@ -26,3 +28,12 @@ def sizeof_fmt(num, suffix='B'):
       return "%3.1f%s%s" % (num, unit, suffix)
     num /= 1024.0
   return "%.1f%s%s" % (num, 'Yi', suffix)
+
+
+def url_for(*args, **kwargs):
+  """
+  A wrapper around #flask.url_for() that replaces escaped `@` symbols
+  in the URL.
+  """
+
+  return flask.url_for(*args, **kwargs).replace('%40', '@')

@@ -28,6 +28,7 @@ import urllib
 manifest = require('@ppym/manifest')
 models = require('./models')
 resources = require('./resources')
+utils = require('./utils')
 
 
 app = flask.Flask('ppy-registry')
@@ -43,14 +44,15 @@ app.jinja_env.globals.update({
   'resources': resources,
   'config': require('./config'),
   'jsonfmt': json.dumps,
-  'urlparse': urllib.parse.urlparse
+  'urlparse': urllib.parse.urlparse,
+  'url_for': utils.url_for
 })
 
 app.jinja_env.filters.update({
   'markdown': markdown.Markdown(
       extensions=['extra', 'codehilite']
   ).convert,
-  'sizeof_fmt': require('./utils').sizeof_fmt
+  'sizeof_fmt': utils.sizeof_fmt
 })
 
 exports = app
