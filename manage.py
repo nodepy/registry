@@ -19,15 +19,16 @@
 # THE SOFTWARE.
 
 import click
+import os
 
-models = require('./models')
+models = require('./lib/models')
 
 
-@click.command()
+@click.group()
 def main(): pass
 
 
-@cli.command()
+@main.command()
 def drop():
   reply = input('Do you really want to drop all data in the database? ')
   if reply  in ('y', 'yes'):
@@ -39,7 +40,7 @@ def drop():
     print('Better so.')
 
 
-@cli.command()
+@main.command()
 @click.option('-u', '--username')
 @click.option('-p', '--password')
 @click.option('-e', '--email')
@@ -48,16 +49,17 @@ def drop():
 def adduser(username, password, email, superuser, verified):
   if not username:
     username = input('Username? ')
+  if models.User.objects(name=username).first():
+    print('User {} already exists'.format(username))
+    return 1
+
   if not password:
     password = input('Password? ')
     if input('Confirm Password? ') != password:
       print('passwords do not match')
+
   if not email:
     email = input('Email? ')
-
-  if models.User.objects(name=username).first():
-    print('User {} already exists'.format(username))
-    return 1
   if models.User.objects(email=email).first():
     print('Email {} already in use'.format(email))
     return 1
@@ -68,16 +70,20 @@ def adduser(username, password, email, superuser, verified):
   print('User created.')
 
 
-@cli.command()
+@main.command()
 @click.option('-d', '--dry', is_flag=True)
 def migrate(dry):
   """
   Use after an update to upgrade the database.
   """
 
-  migrate = require('./migrate').Migration(models.db,
+  migrate = require('./lib/migrate').Migration(models.db,
       models.CURRENT_REVISION, models.TARGET_REVISION,
       os.path.join(__directory__, 'migrations'), dry=dry)
   migrate.execute()
   if not dry:
     models.MigrationRevision.set(models.TARGET_REVISION)
+
+
+if require.main == module:
+  main()

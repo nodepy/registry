@@ -21,12 +21,12 @@
 import os
 import sys
 
-config = require('./config')
-models = require('./models')
-app = require('./app')
-require('./views/api')
-require('./views/browse')
-require('./views/docs')
+config = require('./lib/config')
+models = require('./lib/models')
+app = require('./lib/app')
+require('./lib/views/api')
+require('./lib/views/browse')
+require('./lib/views/docs')
 
 
 def main():

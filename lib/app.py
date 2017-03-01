@@ -37,7 +37,7 @@ app.config['TEMPLATES_AUTO_RELOAD'] = True
 
 # Initialize the Jinja environment globals and filters..
 app.jinja_env.globals.update({
-  '__version__': str(manifest.parse(os.path.join(__directory__, 'package.json')).version),
+  '__version__': str(manifest.parse(os.path.join(__directory__, '../package.json')).version),
   'active': lambda v, x: jinja2.Markup('class="active"') if v == x else '',
   'User': models.User,
   'Package': models.Package,

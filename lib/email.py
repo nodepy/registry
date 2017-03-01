@@ -18,6 +18,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+import click
 from smtplib import SMTP, SMTP_SSL
 from email.mime.text import MIMEText
 
@@ -30,3 +31,24 @@ def make_smtp():
   else:
     cls = SMTP
   return cls(config['registry.email.smtp_host'])
+
+
+@click.command()
+@click.argument('from_', 'from')
+@click.argument('to')
+def main(from_, to):
+  """
+  Send a test-email using the PPYM registry email configuration.
+  """
+
+  part = email.MIMEText('This is a test email')
+  part['From'] = from_
+  part['To'] = to
+  part['Subject'] = 'Test email'
+  s = email.make_smtp()
+  s.sendmail(from_, [to], part.as_string())
+  s.quit()
+
+
+if require.main == module:
+  main()
