@@ -12,8 +12,12 @@ unstable.
 
 __Requirements__
 
-- [Node.py] on Python 3.5+
+- [Node.py]
 - MongoDB
+
+The PPYM registry is deployed on Python 3.6 and is also regularly tested on
+Python 3.5. It may also run on other versions of Python (even Python 2.7), but
+there is no guarantuee.
 
 __Deployment__
 

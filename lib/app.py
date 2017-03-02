@@ -23,7 +23,7 @@ import jinja2
 import json
 import markdown
 import os
-import urllib
+from six.moves import urllib
 
 manifest = require('ppym/lib/manifest')
 models = require('./models')
