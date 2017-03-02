@@ -17,9 +17,10 @@ __Requirements__
 
 __Deployment__
 
-Clone the repository and install the dependencies with [PPYM]. To make
-deployment easier, PPYM is included as a Git submodule already.
+Clone the repository, bootstrap the [PPYM] dependencies, then install the
+dependencies of the registry server.
 
+    $ node.py ppym/bootstrap
     $ node.py ppym install
 
 After the dependencies have been installed, you can start the server.
