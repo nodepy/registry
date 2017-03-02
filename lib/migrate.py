@@ -53,7 +53,7 @@ class Migration(object):
 
   def _check_collection(self, collection):
     if collection not in self.db.collection_names():
-      raise MigrationError('Database has no collection "{}"'.format(collection))
+      print('    warning: Database has no collection "{}"'.format(collection))
 
   def add_field(self, collection, field, value):
     """

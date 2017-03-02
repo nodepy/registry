@@ -197,7 +197,7 @@ def migrate(dry):
 
   migrate = require('./lib/migrate').Migration(models.db,
       models.CURRENT_REVISION, models.TARGET_REVISION,
-      os.path.join(__directory__, 'migrations'), dry=dry)
+      os.path.join(__directory__, 'lib/migrations'), dry=dry)
   migrate.execute()
   if not dry:
     models.MigrationRevision.set(models.TARGET_REVISION)
