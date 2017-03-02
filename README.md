@@ -1,4 +1,5 @@
-<img src="https://i.imgur.com/CdzJiFi.png" align="right" width="150px"></img>
+<img src="https://i.imgur.com/IfmOKFI.png" align="right" width="150px"></img>
+
 # PPYM registry
 
 This is the PPYM registry server which is built entirely on [Node.py]. It is
