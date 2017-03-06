@@ -58,3 +58,10 @@ __Todo__
 - Command-line to update existing users (eg. promote them to superusers)
 - User management API (change of password, email, etc. for the `ppym`
   command-line).
+
+## Changelog
+
+### v0.0.4
+
+- Fix #1: TemplateNotFound when running the Flask app not from the project root
+- Fix #2: Can not upload manifest containing . in a key
