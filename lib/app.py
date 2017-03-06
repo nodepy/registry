@@ -32,7 +32,7 @@ utils = require('./utils')
 markdown = require('./markdown')
 
 
-app = flask.Flask('ppy-registry')
+app = flask.Flask('ppy-registry', template_folder=os.path.join(__directory__, '../templates'))
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 
 # Initialize the Jinja environment globals and filters..
