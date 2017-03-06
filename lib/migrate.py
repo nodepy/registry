@@ -81,3 +81,20 @@ class Migration(object):
     else:
       result = self.db[collection].update({}, {'$unset': {field: 1}})
       print('    {}'.format(result))
+
+  def update_collection(self, collection):
+    """
+    Decorator for a function that will be for all documents in the
+    specified *collection*.
+    """
+
+    def decorator(func):
+      print('  Updating collection "{}" with {}()'.format(collection, func.__name__))
+      self._check_collection(collection)
+      for obj in self.db[collection].find({}):
+        func(obj)
+        if not self.dry:
+          self.db[collection].save(obj)
+      if self.dry:
+        print('    Objects not saved (dry run)')
+    return decorator
