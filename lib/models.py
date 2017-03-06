@@ -108,7 +108,10 @@ class PackageVersion(Document):
   created = DateTimeField(default=datetime.now)
   files = ListField(StringField())
   readme = StringField()
-  manifest = DynamicField()
+
+  # Actually a JSON encoded string, but MongoDB does not allow dots in
+  # documents, which may very well ocurr in package manifests.
+  manifest = StringField()
 
   def add_file(self, filename):
     if filename not in self.files:
@@ -162,4 +165,4 @@ def hash_password(password):
 
 
 CURRENT_REVISION = MigrationRevision.get()
-TARGET_REVISION = 1  # Current revision number of our models.
+TARGET_REVISION = 2  # Current revision number of our models.

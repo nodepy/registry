@@ -88,7 +88,11 @@ class FindPackage(Resource):
     key = lambda x: semver.Version(x.version)
     best = version.best_of(versions, key=key)
 
-    return best.manifest
+    try:
+      return json.loads(best.manifest)
+    except json.JSONDecodeError:
+      app.logger.error("invalid manifest found: {}@{}".format(best.package.name, best.version))
+      flask.abort(505)
 
   def not_found(self, package, version):
     return {'error': {
@@ -216,7 +220,7 @@ class Upload(Resource):
       else:
         replies.append('Updated package version "{}"'.format(pkgmf.identifier))
       pkgversion.readme = files.get('README.md', '')
-      pkgversion.manifest = pkgmf_json
+      pkgversion.manifest = files['package.json']
       pkgversion.add_file(filename)
       pkgversion.save()
 
