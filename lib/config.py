@@ -27,7 +27,7 @@ config.defaults.update({
   'registry.visible.host': '${registry.host}:${registry.port}',
   'registry.visible.url_scheme': 'http',
   'registry.debug': 'false',
-  'registry.prefix': './ppy_registry',
+  'registry.prefix': './ppym_registry',
   'registry.mongodb.host': 'localhost',
   'registry.mongodb.port': '27017',
   'registry.mongodb.db': 'ppy_registry',
