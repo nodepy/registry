@@ -168,9 +168,10 @@ class Upload(Resource):
     if filename == registry_client.get_package_archive_name(package, version):
       # Save the uploaded file to a temporary path. Make sure it gets
       # deleted when we're done with the request.
-      with tempfile.NamedTemporaryFile(suffix='_' + filename, delete=False) as tmp:
-        shutil.copyfileobj(storage, tmp)
+      tmp = tempfile.NamedTemporaryFile(suffix='_' + filename, delete=False)
+      tmp.close()
       finally_.append(lambda: fs.silentremove(tmp.name))
+      storage.save(tmp.name)
 
       # Extract the package.json and README.md files.
       files = {}
