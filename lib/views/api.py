@@ -88,6 +88,9 @@ class FindPackage(Resource):
     key = lambda x: semver.Version(x.version)
     best = version.best_of(versions, key=key)
 
+    if not best:
+      return self.not_found(package, version)
+
     try:
       return json.loads(best.manifest)
     except json.JSONDecodeError:
