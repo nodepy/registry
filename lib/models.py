@@ -19,6 +19,7 @@
 # THE SOFTWARE.
 
 import flask
+import json
 import os
 import uuid
 
@@ -112,6 +113,13 @@ class PackageVersion(Document):
   # Actually a JSON encoded string, but MongoDB does not allow dots in
   # documents, which may very well ocurr in package manifests.
   manifest = StringField()
+
+  def __init__(self, *args, **kwargs):
+    super().__init__(*args, **kwargs)
+    try:
+      self.manifest_json = json.loads(self.manifest)
+    except json.JSONDecodeError:
+      self.manifest_json = None
 
   def add_file(self, filename):
     if filename not in self.files:
