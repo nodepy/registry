@@ -63,6 +63,14 @@ __Todo__
 
 ## Changelog
 
+### 0.0.5
+
+__Template__
+
+- Stick footer to bottom
+- Show active page category by darker background in the menu
+- Fix display of package description and license on the User page
+
 ### v0.0.4
 
 - Update page design with Kube CSS instead of Twitter Bootstrap

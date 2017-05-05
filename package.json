@@ -1,6 +1,6 @@
 {
   "name": "ppym-registry",
-  "version": "0.0.4",
+  "version": "0.0.5-dev",
   "license": "MIT",
   "description": "The Node.py Package Registry",
   "repository": "https://github.com/nodepy/ppym-registry",
