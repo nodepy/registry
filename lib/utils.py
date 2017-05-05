@@ -19,6 +19,7 @@
 # THE SOFTWARE.
 
 import flask
+import jinja2
 import markupsafe
 import pygments
 import pygments.lexers
@@ -54,3 +55,8 @@ def pygmentize(code, language):
   fmt = pygments.formatters.HtmlFormatter(cssclass='codehilite')
   res = pygments.highlight(code, lexers[language](), fmt)
   return markupsafe.Markup(res)
+
+
+@jinja2.contextfunction
+def active(context, name):
+  return 'active' if context['nav'] == name else ''

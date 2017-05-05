@@ -36,16 +36,16 @@
       </div>
       <nav id="top-nav">
         <ul>
-          <li class="{{ 'active' if nav=='browse' else '' }}">
+          <li class="{{active('browse')}}">
             <a class="nav-link" href="{{ url_for('browse') }}">Packages</a>
           </li>
-          <li class="{{ 'active' if nav=='users' else '' }}">
+          <li class="{{active('users')}}">
             <a class="nav-link" href="{{ url_for('users') }}">Users</a>
           </li>
-          <li class="{{ 'active' if nav=='docs' else '' }}">
+          <li class="{{active('docs')}}">
             <a class="nav-link" href="{{ url_for('docs') }}">Documentation</a>
           </li>
-          <li class="{{ 'active' if nav=='terms' else '' }}">
+          <li class="{{active('terms')}}">
             <a class="nav-link" href="{{ url_for('terms') }}">Terms</a>
           </li>
         </ul>

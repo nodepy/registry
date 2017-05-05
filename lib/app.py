@@ -47,6 +47,7 @@ app.jinja_env.globals.update({
   'jsonfmt': json.dumps,
   'urlparse': urllib.parse.urlparse,
   'url_for': utils.url_for,
+  'active': utils.active
 })
 
 app.jinja_env.filters.update({
