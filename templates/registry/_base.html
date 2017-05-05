@@ -30,15 +30,12 @@
     {% endblock %}
   </head>
   <body>
-    <div id="top" class="row"><div class="wrapper">
+    <div id="top"><div class="wrapper">
       <div id="top-brand">
-        <a href="{{ url_for('index') }}">PPYM</a>
+        <a class="{{ 'active' if nav=='index' else '' }}" href="{{ url_for('index') }}">PPYM</a>
       </div>
       <nav id="top-nav">
         <ul>
-          <li class="{{ 'active' if nav=='index' else '' }}">
-            <a class="nav-link" href="{{ url_for('index') }}">Home</a>
-          </li>
           <li class="{{ 'active' if nav=='browse' else '' }}">
             <a class="nav-link" href="{{ url_for('browse') }}">Packages</a>
           </li>

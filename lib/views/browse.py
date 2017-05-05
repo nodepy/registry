@@ -53,7 +53,7 @@ def package(package, scope=None, version=None):
   else:
     version = package.latest
   return render_template('registry/browse/package.html',
-      package=package, version=version)
+      package=package, version=version, nav='browse')
 
 
 @app.route('/browse/users')
@@ -66,7 +66,7 @@ def user(user):
   user = User.objects(name=user).first()
   if not user:
     abort(404)
-  return render_template('registry/browse/user.html', user=user)
+  return render_template('registry/browse/user.html', user=user, nav='users')
 
 
 @app.route('/email/validate/<token>')
@@ -93,7 +93,7 @@ def page_not_found(e):
 
 @app.errorhandler(500)
 def page_not_found(e):
-  return render_template('registry/500.html')
+  return Response(render_template('registry/500.html'), 500)
 
 
 @app.route('/docs/latest')
