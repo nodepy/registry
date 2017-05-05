@@ -9,7 +9,8 @@
     "python": ">=2.7.0 || >=3.3.0"
   },
   "dependencies": {
-    "ppym": "~0.0.5"
+    "ppym": "~0.0.5",
+    "werkzeug-reloader-patch": "~0.0.1"
   },
   "python-dependencies": {
     "Flask": "==0.12",

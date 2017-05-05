@@ -26,6 +26,7 @@ models = require('./lib/models')
 app = require('./lib/app')
 require('./lib/views/api')
 require('./lib/views/browse')
+require('werkzeug-reloader-patch').install()
 
 
 def main():
@@ -39,13 +40,6 @@ def main():
   host = config['registry.host']
   port = int(os.getenv('', int(config['registry.port'])))
   debug = (config['registry.debug'].lower().strip() == 'true')
-  if debug:
-    # TODO: Support Werkzeug livereloader in ppy environments.
-    #       See ppym/engine#6.
-    print('note: Unfortunately, Flask debug mode (specifically livereload) '
-        'is currently not supported in ppy environments.')
-    debug = False
-
   app.run(host=host, port=port, debug=debug)
 
 
