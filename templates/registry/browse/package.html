@@ -20,10 +20,16 @@
     <li><a href="#package-versions">Versions</a></li>
     {% endif %}
     {% if version and version.manifest_json.repository %}
-    <li><a href="{{ version.manifest_json.repository }}">Repository</a></li>
+    <li><a href="#dummy" data-absolute-url="{{ version.manifest_json.repository }}"><i class="fa fa-external-link" aria-hidden="true"></i> Repository</a></li>
     {% endif %}
   </ul>
 </nav>
+
+<script>
+$('.tabs a[data-absolute-url]').on('click', function () {
+  document.location.replace($(this).attr('data-absolute-url'))
+})
+</script>
 
 {% if version %}
 <div id="package-description" class="tab-pane in active">
