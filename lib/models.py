@@ -116,10 +116,16 @@ class PackageVersion(Document):
 
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)
-    try:
-      self.manifest_json = json.loads(self.manifest)
-    except json.JSONDecodeError:
-      self.manifest_json = None
+    self._manifest_json = None
+
+  @property
+  def manifest_json(self):
+    if self._manifest_json is None and self.manifest:
+      try:
+        self._manifest_json = json.loads(self.manifest)
+      except json.JSONDecodeError:
+        self._manifest_json = None
+    return self._manifest_json
 
   def add_file(self, filename):
     if filename not in self.files:
