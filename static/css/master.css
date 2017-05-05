@@ -13,6 +13,7 @@ a {
   margin-bottom: 2em;
   border-bottom: 1px solid #ca0000;
   background-color: #ff5555;
+  color: #ffeeee;
 }
 #top > .wrapper {
   display: flex;
@@ -68,10 +69,11 @@ a {
 }
 #top-nav li.active {
   background-color: #ec4141;
+  color: #fff;
 }
 #main { flex: 1; }
 #footer {
-  color:white;
+  color:#ffeeee;
   height: 3em;
   padding: 0 2em;
   margin-top: 2em;
