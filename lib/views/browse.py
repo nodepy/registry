@@ -18,7 +18,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-from flask import abort, request, render_template
+from flask import abort, request, render_template, Response
 
 app = require('../app')
 models = require('../models')
@@ -88,7 +88,7 @@ def terms():
 
 @app.errorhandler(404)
 def page_not_found(e):
-  return render_template('registry/404.html')
+  return Response(render_template('registry/404.html'), 404)
 
 
 @app.errorhandler(500)

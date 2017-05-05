@@ -46,12 +46,13 @@ app.jinja_env.globals.update({
   'config': require('./config'),
   'jsonfmt': json.dumps,
   'urlparse': urllib.parse.urlparse,
-  'url_for': utils.url_for
+  'url_for': utils.url_for,
 })
 
 app.jinja_env.filters.update({
   'markdown': lambda x: markdown().convert(x),
-  'sizeof_fmt': utils.sizeof_fmt
+  'sizeof_fmt': utils.sizeof_fmt,
+  'pygmentize': utils.pygmentize
 })
 
 exports = app

@@ -19,6 +19,10 @@
 # THE SOFTWARE.
 
 import flask
+import markupsafe
+import pygments
+import pygments.lexers
+import pygments.formatters
 
 
 def sizeof_fmt(num, suffix='B'):
@@ -37,3 +41,16 @@ def url_for(*args, **kwargs):
   """
 
   return flask.url_for(*args, **kwargs).replace('%40', '@')
+
+
+def pygmentize(code, language):
+  """
+  """
+
+  lexers = {
+    'json': pygments.lexers.JsonLexer,
+    'python': pygments.lexers.PythonLexer
+  }
+  fmt = pygments.formatters.HtmlFormatter(cssclass='codehilite')
+  res = pygments.highlight(code, lexers[language](), fmt)
+  return markupsafe.Markup(res)

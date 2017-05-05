@@ -1,98 +1,79 @@
 {% extends "registry/_base.html" %}
 {% block head %}
-  <link rel="stylesheet" href="{{ url_for('static', filename='codehilite.css') }}">
-{% endblock %}
-{% block sidebar %}
-  <ul class="nav nav-pills flex-column">
-    <li class="nav-item">
-      <span class="nav-link">{{ package.name + ('@' + version.version if version else '') }}</span>
-    </li>
-    <li class="nav-item">
-      <a href="#package-versions" class="nav-link" data-toggle="tab">Versions</a>
-    </li>
-    <li class="nav-item">
-      <a href="{{ url_for('user', user=package.owner.name) }}" class="nav-link">Owner ({{ package.owner.name }})</a>
-    </li>
-    <li class="nav-item">
-      <hr/>
-    </li>
-    {% if version %}
-      <li class="nav-item">
-        <a href="#package-description" class="nav-link active" data-toggle="tab">Description</a>
-      </li>
-      <li class="nav-item">
-        <a href="#package-manifest" class="nav-link" data-toggle="tab">Manifest</a>
-      </li>
-      <li class="nav-item">
-        <a href="#package-files" class="nav-link" data-toggle="tab">Files</a>
-      </li>
-    {% endif %}
-    <li class="nav-item">
-      <hr/>
-    </li>
-    {% if version and version.manifest.repository %}
-      <li class="nav-item">
-        <a href="{{ version.manifest.repository }}" class="nav-link">Repository</a>
-      </li>
-    {% endif %}
-  </ul>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/codehilite.css') }}">
 {% endblock %}
 {% block content %}
-  <div class="tab-content">
+
+<p class="small">
+  You are viewing <code>{{ package.name + ('@' + version.version if version else '') }}</code>.
+  {% if version and version.version != package.latest.version %}
+    The latest version is <a href="{{ url_for('package', package=package.name, version=package.latest.version) }}">{{ package.latest.version }}</a>
+  {% endif %}
+  The package is owned by <a href="{{ url_for('user', user=package.owner.name) }}">{{ package.owner.name }}</a>.
+</p>
+<nav class="tabs" data-component="tabs">
+  <ul>
     {% if version %}
-      <div id="package-description" class="tab-pane in active">
-        <blockquote>
-        {% if version.readme %}
-          <div class="package-readme">
-            {{ version.readme|markdown|safe }}
-          </div>
-        {% else %}
-          <p>No package description provided.</p>
-        {% endif %}
-        </blockquote>
-      </div>
-      <div id="package-manifest" class="tab-pane">
-        <h1>Manifest</h1>
-        <pre><code>{{ version.manifest }}</code></pre>
-      </div>
-      <div id="package-files" class="tab-pane">
-        <h1>Files</h1>
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th>Filename</th>
-              <th>Size</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for fn in version.files %}
-              <tr>
-                <td><a href="{{ url_for('download', package=package.name, version=version.version, filename=fn) }}">{{ fn }}</a></td>
-                <td>{{ version.get_file_size(fn)|sizeof_fmt }}</td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
+    <li class="active"><a href="#package-description">Description</a></li>
+    <li><a href="#package-manifest">Manifest</a></li>
+    <li><a href="#package-files">Files</a></li>
+    <li><a href="#package-versions">Versions</a></li>
     {% endif %}
-    <div id="package-versions" class="tab-pane">
-      <h1>Versions</h1>
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th>Version</th>
-            <th>Description</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for v in PackageVersion.objects(package=package).all() %}
-            <tr>
-              <td><a href="{{ v.get_url() }}">{{ v.version }}</a></td>
-              <td>{{ v.manifest.description }}</td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
+    {% if version and version.manifest_json.repository %}
+    <li><a href="{{ version.manifest_json.repository }}">Repository</a></li>
+    {% endif %}
+  </ul>
+</nav>
+
+{% if version %}
+<div id="package-description" class="tab-pane in active">
+  {% if version.readme %}
+  <div class="package-readme">
+    {{ version.readme|markdown|safe }}
   </div>
+  {% else %}
+  <p>No package description provided.</p>
+  {% endif %}
+</div>
+<div id="package-manifest" class="tab-pane">
+  {{ version.manifest|pygmentize('json') }}
+</div>
+<div id="package-files" class="tab-pane">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Filename</th>
+        <th>Size</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for fn in version.files %}
+        <tr>
+          <td><a href="{{ url_for('download', package=package.name, version=version.version, filename=fn) }}">{{ fn }}</a></td>
+          <td>{{ version.get_file_size(fn)|sizeof_fmt }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+
+<div id="package-versions" class="tab-pane">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Version</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for v in PackageVersion.objects(package=package).all() %}
+        <tr>
+          <td><a href="{{ v.get_url() }}">{{ v.version }}</a></td>
+          <td>{{ v.manifest_json.description }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 {% endblock %}
