@@ -32,7 +32,9 @@
   <body>
     <div id="top"><div class="wrapper">
       <div id="top-brand">
-        <a class="{{ 'active' if nav=='index' else '' }}" href="{{ url_for('index') }}">PPYM</a>
+        <a class="{{active('index')}}" href="{{ url_for('index') }}">
+          <img src="{{ url_for('static', filename='img/favicon-32x32.png') }}"> PPYM
+        </a>
       </div>
       <nav id="top-nav">
         <ul>
