@@ -165,6 +165,10 @@ def drop(all, package, user, reown, yes, keep_files):
 @click.option('--superuser', is_flag=True)
 @click.option('--verified', is_flag=True)
 def adduser(username, password, email, superuser, verified):
+  """
+  Adds a user to the registry.
+  """
+
   if not username:
     username = input('Username? ')
   if models.User.objects(name=username).first():
@@ -186,6 +190,48 @@ def adduser(username, password, email, superuser, verified):
       superuser=superuser, validated=verified)
   user.save()
   print('User created.')
+
+
+@main.command()
+@click.argument('username')
+def promote(username):
+  """
+  Promotes a user as superuser.
+  """
+
+  user = models.User.objects(name=username).first()
+  if not user:
+    print('User "{}" does not exist.'.format(username))
+    return 1
+  if not user.superuser:
+    user.superuser = True
+    user.save()
+    print('User "{}" promoted.'.format(username))
+    return 0
+  else:
+    print('User "{}" is already a superuser.'.format(username))
+    return 1
+
+
+@main.command()
+@click.argument('username')
+def demote(username):
+  """
+  Demotes a user from his/her superuser status.
+  """
+
+  user = models.User.objects(name=username).first()
+  if not user:
+    print('User "{}" does not exist.'.format(username))
+    return 1
+  if user.superuser:
+    user.superuser = False
+    user.save()
+    print('User "{}" demoted.'.format(username))
+    return 0
+  else:
+    print('User "{}" is not a superuser.'.format(username))
+    return 1
 
 
 @main.command()

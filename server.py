@@ -30,11 +30,15 @@ require('werkzeug-reloader-patch').install()
 
 
 def main():
-  if models.CURRENT_REVISION != models.TARGET_REVISION:
+  if models.CURRENT_REVISION is None:
+    print('note: no database revision number found, assuming empty database.')
+    models.CURRENT_REVISION = models.TARGET_REVISION
+    models.MigrationRevision.set(models.TARGET_REVISION)
+  elif models.CURRENT_REVISION != models.TARGET_REVISION:
     print('error: database not upgraded. The current revision is {} but '
-        'we expected revision {}'.format(models.CURRENT_REVISION,
+        'we expected revision {}.'.format(models.CURRENT_REVISION,
           models.TARGET_REVISION))
-    print('error: use \'ppy-registry migrate\' to upgrade the database')
+    print('error: use the \'migrate\' command to upgrade the database.')
     sys.exit(1)
 
   host = config['registry.host']

@@ -146,7 +146,7 @@ class MigrationRevision(Document):
     obj = MigrationRevision.objects().first()
     if obj is not None:
       return obj.revision
-    return 0
+    return None
 
   @staticmethod
   def set(revision):

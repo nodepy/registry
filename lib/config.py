@@ -30,7 +30,7 @@ config.defaults.update({
   'registry.prefix': './ppym_registry',
   'registry.mongodb.host': 'localhost',
   'registry.mongodb.port': '27017',
-  'registry.mongodb.db': 'ppy_registry',
+  'registry.mongodb.db': 'ppym_registry',
   'registry.mongodb.username': None,
   'registry.mongodb.password': None,
   'registry.email.origin': 'no-reply@${registry.visible.host}',
