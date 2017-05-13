@@ -1,6 +1,6 @@
 <img src="https://i.imgur.com/IfmOKFI.png" align="right" width="150px"></img>
 
-## The **nodepy** Package Registry
+## The **Node.py** Package Registry
 
   [nodepy]: https://github.com/nodepy/nodepy
 
@@ -9,7 +9,7 @@ Welcome to the nodepy package registry, the repository for [nodepy] packages.
 allows you to create well structured, easily distributable and reproducible
 Python applications.
 
-### Key Features of nodepy
+### Key Features of Node.py
 
 - The power of *Node.js*'s `require()` in Python
 - Compatible with Python 2.7 and 3.3+

@@ -55,7 +55,7 @@ class User(Document):
 
     self.validation_token = str(uuid.uuid4())
     me = config.email['origin']
-    html = flask.render_template('validate-email.html', user=self)
+    html = flask.render_template('registry/email/validate-email.html', user=self)
     part = email.MIMEText(html, 'html')
     part['Subject'] = 'Validate your upmpy.org email'
     part['From'] = me
