@@ -59,4 +59,4 @@ def pygmentize(code, language):
 
 @jinja2.contextfunction
 def active(context, name):
-  return 'active' if context['nav'] == name else ''
+  return 'active' if context.get('nav', '') == name else ''

@@ -1,16 +1,16 @@
 {
-  "name": "ppym-registry",
+  "name": "@nodepy/registry",
   "version": "0.0.5-dev",
   "license": "MIT",
-  "description": "The Node.py Package Registry",
-  "repository": "https://github.com/nodepy/ppym-registry",
+  "description": "the nodepy package registry",
+  "repository": "https://github.com/nodepy/registry",
   "engines": {
     "nodepy": ">=0.0.6",
     "python": ">=2.7.0 || >=3.3.0"
   },
   "dependencies": {
-    "ppym": "~0.0.5",
-    "werkzeug-reloader-patch": "~0.0.1"
+    "@nodepy/pm": "-e _vendor/nodepy/nodepy-pm",
+    "@nodepy/werkzeug-reloader-patch": "-e _vendor/werkzeug-reloader-patch"
   },
   "python-dependencies": {
     "Flask": "==0.12",

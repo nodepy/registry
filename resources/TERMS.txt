@@ -1,9 +1,9 @@
 ==============================================================================
-#                ppy package registry -- Terms and Licenses                  #
+#               nodepy package registry -- Terms and Licenses                #
 ==============================================================================
 
-License terms and notices for the ppy and ppym command-line programs can be
-found in the LICENSE.txt file of the project's source code at
-https://www.github.com/ppym/engine and https://www.github.com/ppym/ppym.
+License terms and notices for the nodepy and nodepy-pm command-line programs
+can be found in the LICENSE.txt file of the project's source code at
+https://www.github.com/nodepy/nodepy.
 
 TODO: Include terms similar to https://www.npmjs.com/policies/open-source-terms

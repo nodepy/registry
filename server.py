@@ -21,7 +21,7 @@
 import os
 import sys
 
-config = require('./lib/config')
+config = require('./config')
 models = require('./lib/models')
 app = require('./lib/app')
 require('./lib/views/api')
@@ -41,10 +41,7 @@ def main():
     print('error: use the \'migrate\' command to upgrade the database.')
     sys.exit(1)
 
-  host = config['registry.host']
-  port = int(os.getenv('', int(config['registry.port'])))
-  debug = (config['registry.debug'].lower().strip() == 'true')
-  app.run(host=host, port=port, debug=debug)
+  app.run(host=config.host, port=config.port, debug=config.debug)
 
 
 if require.main == module:

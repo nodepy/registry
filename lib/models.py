@@ -27,20 +27,14 @@ from datetime import datetime
 from hashlib import sha512
 from mongoengine import *
 
-config = require('./config')
+config = require('../config')
 email = require('./email')
-semver = require('ppym/lib/semver')
+semver = require('nodepy-pm/lib/semver')
 
 # Note: if you experience extremly long load times, it might be because
 # the mongo host can not be reached.
 # TODO: Find out whether there is a timeout setting for connect().
-db = connect(
-  db = config['registry.mongodb.db'],
-  host = config['registry.mongodb.host'],
-  port = int(config['registry.mongodb.port']),
-  username = config['registry.mongodb.username'],
-  password = config['registry.mongodb.password'],
-)[config['registry.mongodb.db']]
+db = connect(**config.mongodb)[config.mongodb['db']]
 
 
 class User(Document):
@@ -60,7 +54,7 @@ class User(Document):
     """
 
     self.validation_token = str(uuid.uuid4())
-    me = config['registry.email.origin']
+    me = config.email['origin']
     html = flask.render_template('validate-email.html', user=self)
     part = email.MIMEText(html, 'html')
     part['Subject'] = 'Validate your upmpy.org email'
@@ -73,10 +67,8 @@ class User(Document):
     s.quit()
 
   def get_validation_url(self):
-    res = config['registry.visible.url_scheme'] + '://'
-    res += config['registry.visible.host']
-    res += flask.url_for('validate_email', token=self.validation_token)
-    return res
+    return config.visible_url + flask.url_for(
+      'validate_email', token=self.validation_token)
 
   def get_url(self):
     return flask.url_for('user', user=self.name)
@@ -97,7 +89,7 @@ class Package(Document):
         self.save()
 
   def get_directory(self):
-    return os.path.join(config['registry.prefix'], self.name)
+    return os.path.join(config.prefix, self.name)
 
   def get_url(self):
     return flask.url_for('package', package=self.package.name)

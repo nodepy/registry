@@ -24,9 +24,9 @@ import shutil
 import sys
 
 models = require('./lib/models')
-semver = require('ppym/lib/semver')
-refstring = require('ppym/lib/refstring')
-config = require('./lib/config')
+semver = require('nodepy-pm/lib/semver')
+refstring = require('nodepy-pm/lib/refstring')
+config = require('./config')
 
 
 def prompt(question):
@@ -68,8 +68,8 @@ def drop(all, package, user, reown, yes, keep_files):
     models.MigrationRevision.drop_collection()
     if not keep_files:
       print('Deleting registry data directory ...')
-      if os.path.isdir(config['registry.prefix']):
-        shutil.rmtree(config['registry.prefix'])
+      if os.path.isdir(config.prefix):
+        shutil.rmtree(config.prefix)
     sys.exit(0)
 
   if package:

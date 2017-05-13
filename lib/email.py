@@ -22,15 +22,15 @@ import click
 from smtplib import SMTP, SMTP_SSL
 from email.mime.text import MIMEText
 
-config = require('./config')
+config = require('../config')
 
 
 def make_smtp():
-  if str(config['registry.email.smtp_ssl']).lower() == 'true':
+  if config.email['smtp_ssl']:
     cls = SMTP_SSL
   else:
     cls = SMTP
-  return cls(config['registry.email.smtp_host'])
+  return cls(config.email['smtp_host'])
 
 
 @click.command()
@@ -38,7 +38,7 @@ def make_smtp():
 @click.argument('to')
 def main(from_, to):
   """
-  Send a test-email using the PPYM registry email configuration.
+  Send a test-email using the nodepy registry email configuration.
   """
 
   part = email.MIMEText('This is a test email')

@@ -1,26 +1,26 @@
 <img src="https://i.imgur.com/IfmOKFI.png" align="right" width="150px"></img>
 
-## PPYM Package Registry
+## The **nodepy** Package Registry
 
-  [Node.py]: https://github.com/nodepy/nodepy
+  [nodepy]: https://github.com/nodepy/nodepy
 
-Welcome to the PPYM package registry, the repository for [Node.py] packages.
-**Node.py** is a Python runtime layer that is inspired by **Node.js**. It
+Welcome to the nodepy package registry, the repository for [nodepy] packages.
+**nodepy** is a Python runtime layer that is inspired by **Node.js**. It
 allows you to create well structured, easily distributable and reproducible
 Python applications.
 
-### Key Features of Node.py
+### Key Features of nodepy
 
-- The power of **Node.js**'s `require()` in Python
+- The power of *Node.js*'s `require()` in Python
 - Compatible with Python 2.7 and 3.3+
-- Batteries included: the PPYM package manager allows you to install and
-  manage dependencies
+- Batteries included: the **nodepy-pm** package manager allows you to install
+  and manage dependencies
 - Standard Python modules are supported and it is *encouraged* to use them
 
 ### Installation
 
-You can install **Node.py** via Pip. This will automatically install the
-`nodepy` and `ppym` commands.
+You can install **nodepy** via Pip. This will automatically install the
+`nodepy` and `nodepy-pm` commands.
 
     $ pip install node.py
 
@@ -30,6 +30,6 @@ is in your `PATH` (eg. `~/.local/bin` on Linux, `~/.local/Scripts` or
 
 It is also recommended to add the path `nodepy_modules/.bin` to your
 `PATH` environment variables, so that you will be able to run scripts
-installed locally via PPYM.
+installed locally via **nodepy-pm**.
 
     $ echo 'export PATH="PATH:nodepy_modules/.bin"' >> ~/.profile

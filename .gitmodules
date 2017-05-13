@@ -1,0 +1,6 @@
+[submodule "_vendor/nodepy"]
+	path = _vendor/nodepy
+	url = https://github.com/nodepy/nodepy.git
+[submodule "_vendor/werkzeug-reloader-patch"]
+	path = _vendor/werkzeug-reloader-patch
+	url = https://github.com/nodepy/werkzeug-reloader-patch.git

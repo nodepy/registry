@@ -25,14 +25,14 @@ import markdown
 import os
 from six.moves import urllib
 
-manifest = require('ppym/lib/manifest')
+manifest = require('nodepy-pm/lib/manifest')
 models = require('./models')
 resources = require('./resources')
 utils = require('./utils')
 markdown = require('./markdown')
 
 
-app = flask.Flask('ppym-registry', template_folder=os.path.join(__directory__, '../templates'))
+app = flask.Flask('nodepy-registry', template_folder=os.path.join(__directory__, '../templates'))
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 
 # Initialize the Jinja environment globals and filters..
@@ -43,7 +43,7 @@ app.jinja_env.globals.update({
   'Package': models.Package,
   'PackageVersion': models.PackageVersion,
   'resources': resources,
-  'config': require('./config'),
+  'config': require('../config'),
   'jsonfmt': json.dumps,
   'urlparse': urllib.parse.urlparse,
   'url_for': utils.url_for,

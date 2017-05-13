@@ -27,14 +27,14 @@
     <meta name="msapplication-TileImage" content="{{ url_for('static', filename='img/ms-icon-144x144.png') }}">
     <meta name="theme-color" content="#ffffff">
 
-    {% if config['registry.google_analytics'] %}
+    {% if config.google_analytics %}
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
       })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-      ga('create', '{{ config["registry.google_analytics"] }}', 'auto');
+      ga('create', '{{ config.google_analytics }}', 'auto');
       ga('send', 'pageview');
     </script>
     {% endif %}
@@ -46,7 +46,7 @@
     <div id="top"><div class="wrapper">
       <div id="top-brand">
         <a class="{{active('index')}}" href="{{ url_for('index') }}">
-          <img src="{{ url_for('static', filename='img/favicon-32x32.png') }}"> PPYM
+          <img src="{{ url_for('static', filename='img/favicon-32x32.png') }}"> nodepy/registry
         </a>
       </div>
       <nav id="top-nav">
@@ -58,7 +58,7 @@
             <a class="nav-link" href="{{ url_for('users') }}">Users</a>
           </li>
           <li class="{{active('docs')}}">
-            <a class="nav-link" href="{{ url_for('docs') }}">Documentation</a>
+            <a class="nav-link" href="https://nodepy.github.io/nodepy">Documentation</a>
           </li>
           <li class="{{active('terms')}}">
             <a class="nav-link" href="{{ url_for('terms') }}">Terms</a>
@@ -66,9 +66,9 @@
         </ul>
       </nav>
     </div></div>
-    {% if config['registry.accept_registrations'] != 'true' or True %}
+    {% if config.accept_registrations %}
     <div id="sitenotice" class="row"><div class="wrapper small">
-      <b>Note:</b> Registrations to the PPYM registry are currently disabled.
+      <b>Note:</b> Registrations to the nodepy registry are currently disabled.
     </div></div>
     {% endif %}
     {% block subtop %}
@@ -82,7 +82,7 @@
     <footer id="footer">
       <div id="footer-inner" class="wrapper">
         <div class="copyright">Copyright &copy; <a href="https://niklasrosenstein.com">Niklas Rosenstein</a> 2017</div>
-        <div class="version"><a href="https://github.com/nodepy/ppym-registry">Running on <code>ppym-registry@{{ __version__ }}</code></a></div>
+        <div class="version"><a href="https://github.com/nodepy/registry">Running on <code>@nodepy/registry@{{ __version__ }}</code></a></div>
       </div>
     </div>
   </body>

@@ -32,16 +32,16 @@ from flask import request
 from flask_restful import Resource, Api
 
 fs = require('../fs')
-config = require('../config')
+config = require('../../config')
 resources = require('../resources')
 app = require('../app')
 httpauth = require('../httpauth')
 decorators = require('../decorators')
 models = require('../models')
-manifest = require('ppym/lib/manifest')
-semver = require('ppym/lib/semver')
-refstring = require('ppym/lib/refstring')
-registry_client = require('ppym/lib/registry')
+manifest = require('nodepy-pm/lib/manifest')
+semver = require('nodepy-pm/lib/semver')
+refstring = require('nodepy-pm/lib/refstring')
+registry_client = require('nodepy-pm/lib/registry')
 
 User, Package, PackageVersion = models.User, \
     models.Package, models.PackageVersion
@@ -114,7 +114,7 @@ class Download(Resource):
 
   def get(self, package, version, filename, scope=None):
     package = str(refstring.Package(scope, package))
-    directory = os.path.join(config['registry.prefix'], package, version)
+    directory = os.path.join(config.prefix, package, version)
     directory = os.path.normpath(os.path.abspath(directory))
     return flask.send_from_directory(directory, filename)
 
@@ -139,8 +139,8 @@ class Upload(Resource):
     if not user.validated:
       return email_not_verified(user)
 
-    if config['registry.enforce_user_namespaces'] == 'true' \
-        and package.scope != user.name and not user.superuser:
+    if config.enforce_package_namespaces and \
+        package.scope != user.name and not user.superuser:
       return bad_request('You can only upload packages into your own namespace. '
         ' Rename your package to "@{}/{}"'.format(user.name, package.name))
 
@@ -158,7 +158,7 @@ class Upload(Resource):
       return bad_request('"package.json" can not be uploaded directly')
 
     # Get the directory and filename to upload the file to.
-    directory = os.path.join(config['registry.prefix'], str(package), str(version))
+    directory = os.path.join(config.prefix, str(package), str(version))
     absfile = os.path.join(directory, filename)
 
     # Check if the upload should be forced even if the file already exists.
@@ -275,7 +275,7 @@ class Register(Resource):
       return bad_request('Email "{}" is already in use'.format(email))
     # TODO: Validate that `email` is a valid email address.
 
-    if config['registry.accept_registrations'] != 'true':
+    if not config.accept_registrations:
       return bad_request('New user registrations are currently not accepted. '
           'Talk to the registry admin to manually create an account for you.')
 
@@ -283,7 +283,7 @@ class Register(Resource):
     user = User(name=username, passhash=models.hash_password(password),
         email=email, validation_token=None, validated=False)
 
-    if config['registry.email.require_verification'] != 'true':
+    if not config.require_email_verification:
       user.validated = True
     else:
       try:
