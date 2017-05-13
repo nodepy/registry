@@ -46,5 +46,8 @@ enforce_package_namespaces = True
 # will be displayed on the webpage and new registrations will be rejected.
 accept_registrations = True
 
+# Site title.
+site_title = 'nodepy/registry'
+
 # A Google Analytics ID.
 google_analytics = None
