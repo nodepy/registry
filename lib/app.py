@@ -31,9 +31,10 @@ resources = require('./resources')
 utils = require('./utils')
 markdown = require('./markdown')
 
-
 app = flask.Flask('nodepy-registry', template_folder=os.path.join(__directory__, '../templates'))
+app.debug = require('../config').debug
 app.config['TEMPLATES_AUTO_RELOAD'] = True
+require('./sass')(app, force=app.debug)
 
 # Initialize the Jinja environment globals and filters..
 app.jinja_env.globals.update({
@@ -47,7 +48,8 @@ app.jinja_env.globals.update({
   'jsonfmt': json.dumps,
   'urlparse': urllib.parse.urlparse,
   'url_for': utils.url_for,
-  'active': utils.active
+  'active': utils.active,
+  'static': lambda fn: utils.url_for('static', filename=fn)
 })
 
 app.jinja_env.filters.update({

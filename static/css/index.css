@@ -1,0 +1,90 @@
+@import "https://fonts.googleapis.com/css?family=Open+Sans|Roboto";
+@import "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css";
+/* Variables */
+/* General */
+html, body {
+  margin: 0;
+  padding: 0; }
+
+body {
+  font: 14px "Roboto", sans-serif;
+  color: #eeeeee;
+  background-color: white;
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column; }
+
+h1, h2, h3, h3, h4, h5, h6 {
+  color: inherit;
+  font-family: "Open Sans", sans-serif; }
+
+a, a:hover, a:focus {
+  text-decoration: none;
+  color: inherit; }
+
+.squashed-title {
+  display: block;
+  float: left;
+  font: 350% "Open Sans", sans-serif;
+  font-weight: bold; }
+  .squashed-title.left {
+    float: left;
+    margin: 0 20px 20px 0; }
+  .squashed-title.right {
+    float: right;
+    margin: 0 20px 20px; }
+
+/* Header */
+header {
+  height: 40px;
+  line-height: 40px;
+  padding: 0 20px;
+  background-color: #ab2020;
+  border-bottom: 1px solid #861818; }
+
+header .brand i {
+  padding-right: 1em; }
+
+header a:hover {
+  font-weight: bold; }
+
+/* Footer */
+footer {
+  padding: 20px;
+  background-color: #1e3f61;
+  border-top: 5px solid #162331; }
+  footer a, footer a:hover, footer a:focus, footer a:visited {
+    color: #3af; }
+  footer .version {
+    flex: 1; }
+  footer .links ul {
+    display: flex;
+    margin: 0; }
+    footer .links ul li {
+      margin-left: 1em;
+      list-style: none; }
+
+/* Main */
+main {
+  flex: 1; }
+  main a, main a:hover, main a:focus {
+    color: #3af; }
+
+main > nav {
+  display: flex;
+  flex-direction: column;
+  color: white;
+  padding: 20px;
+  background-color: #ab2020;
+  border-right: 1px solid #861818;
+  box-shadow: 5px 0px 5px rgba(0, 0, 0, 0.1); }
+  main > nav > *:nth-last-child(2) {
+    flex: 1; }
+  main > nav a, main > nav a:hover, main > nav a:focus {
+    color: white; }
+  main > nav ul li {
+    line-height: 30px; }
+
+main > article {
+  padding: 20px;
+  color: black; }

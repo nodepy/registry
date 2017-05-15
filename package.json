@@ -16,9 +16,10 @@
     "Flask": ">=0.12",
     "Flask-HTTPAuth": ">=3.2.2",
     "Flask-RESTful": ">=0.3.5",
+    "Pygments": ">=2.2.0",
+    "libsass": ">=0.12.3",
     "markdown": ">=2.6.8",
     "mkdocs": ">=0.16.1",
-    "mongoengine": ">=0.11.0",
-    "Pygments": ">=2.2.0"
+    "mongoengine": ">=0.11.0"
   }
 }

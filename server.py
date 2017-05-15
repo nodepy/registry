@@ -26,8 +26,7 @@ models = require('./lib/models')
 app = require('./lib/app')
 require('./lib/views/api')
 require('./lib/views/browse')
-require('werkzeug-reloader-patch').install()
-
+require('@nodepy/werkzeug-reloader-patch').install()
 
 def main():
   if models.CURRENT_REVISION is None:
@@ -41,7 +40,7 @@ def main():
     print('error: use the \'migrate\' command to upgrade the database.')
     sys.exit(1)
 
-  app.run(host=config.host, port=config.port, debug=config.debug)
+  app.run(host=config.host, port=config.port)
 
 
 if require.main == module:

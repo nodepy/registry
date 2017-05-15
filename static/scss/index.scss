@@ -1,0 +1,142 @@
+
+@import "https://fonts.googleapis.com/css?family=Open+Sans|Roboto";
+@import "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css";
+
+/* Variables */
+$padding: 20px;
+
+$font-title: 'Open Sans', sans-serif;
+$font-body: 'Roboto', sans-serif;
+
+$primary-bg: white;  // #456c92
+$primary-bg-alt: #1e3f61;
+$primary-bg-alt2: #162331;
+$primary-fg: #eeeeee;
+
+$header-bg: #ab2020;
+$header-bg-alt: #861818;
+$header-height: 40px;
+$header-fg: white;
+
+$nav-item-height: 30px;
+
+$link-color: #3af;
+
+/* General */
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font: 14px $font-body;
+  color: $primary-fg;
+  background-color: $primary-bg;
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+h1, h2, h3, h3, h4, h5, h6 {
+  color: inherit;
+  font-family: $font-title;
+}
+
+a, a:hover, a:focus {
+  text-decoration: none;
+  color: inherit;
+}
+
+.squashed-title {
+  display: block;
+  float: left;
+  font: 350% $font-title;
+  font-weight: bold;
+
+  &.left {
+    float: left;
+    margin: 0 $padding $padding 0;
+  }
+  &.right {
+    float: right;
+    margin: 00 $padding $padding;
+  }
+}
+
+/* Header */
+header {
+  height: $header-height;
+  line-height: $header-height;
+  padding: 0 $padding;
+  background-color: $header-bg;
+  border-bottom: 1px solid $header-bg-alt;
+}
+
+header .brand i {
+  padding-right: 1em;
+}
+
+header a:hover {
+  font-weight: bold;
+}
+
+/* Footer */
+footer {
+  padding: $padding;
+  background-color: $primary-bg-alt;
+  border-top: 5px solid $primary-bg-alt2;
+
+  a, a:hover, a:focus, a:visited {
+    color: $link-color;
+  }
+
+  .version {
+    flex: 1;
+  }
+
+  .links ul {
+    display: flex;
+    margin: 0;
+
+    li {
+      margin-left: 1em;
+      list-style: none;
+    }
+  }
+}
+
+/* Main */
+main {
+  flex: 1;
+
+  a, a:hover, a:focus {
+    color: $link-color;
+  }
+}
+
+main > nav {
+  display: flex;
+  flex-direction: column;
+  color: $header-fg;
+  padding: $padding;
+  background-color: $header-bg;
+  border-right: 1px solid $header-bg-alt;
+  box-shadow: 5px 0px 5px rgba(0, 0, 0, 0.1);
+
+  > *:nth-last-child(2) {
+    flex: 1;
+  }
+
+  a, a:hover, a:focus {
+    color: $header-fg;
+  }
+
+  ul li {
+    line-height: $nav-item-height;
+  }
+}
+
+main > article {
+  padding: $padding;
+  color: black;
+}

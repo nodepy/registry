@@ -1,0 +1,14 @@
+
+main {
+  flex: 1;
+}
+
+main nav {
+  padding: $padding;
+  background-color: $header-bg;
+  border-top: 1px solid $header-bg-alt;
+}
+
+main article {
+  padding: $padding;
+}
