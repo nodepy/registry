@@ -33,6 +33,11 @@ def index():
   return render_template('registry/index.html', nav='index')
 
 
+@app.route('/info')
+def info():
+  return render_template('registry/info.html', nav='index')
+
+
 @app.route('/browse')
 def browse():
   return render_template('registry/browse/index.html', nav='browse')

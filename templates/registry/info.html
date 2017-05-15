@@ -1,0 +1,33 @@
+{% extends "registry/_base.html" %}
+{% block content %}
+{% if config.debug %}
+<p class="message warning">warning: running in debug mode.</p>
+{% endif %}
+<h1>Registry Information</h1>
+<table>
+  <tr>
+    <th># Users</th><td>{{User.objects.all().count()}}</td>
+  </tr>
+  <tr>
+    <th># Packages</th><td>{{PackageVersion.objects.all().count()}} ({{Package.objects.all().count()}} unique)</td>
+  </tr>
+  <tr>
+    <th>Enforce Package Namespacing</th><td>{{'Yes' if config.enforce_package_namespaces else 'No'}}</td>
+  </tr>
+  <tr>
+    <th>Accept User Registrations</th><td>{{'Yes' if config.accept_registrations else 'No'}}</td>
+  </tr>
+  <tr>
+    <th>Email Sender Address</th><td>{{config.email['origin']}}</td>
+  </tr>
+  <tr>
+    <th>Registry Version</th><td>{{VERSION}}</td>
+  </tr>
+  <tr>
+    <th>Python Version</th><td>{{PY_VERSION}}</td>
+  </tr>
+  <tr>
+    <th>Flask Version</th><td>{{FLASK_VERSION}}</td>
+  </tr>
+</table>
+{% endblock content %}

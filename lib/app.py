@@ -23,6 +23,7 @@ import jinja2
 import json
 import markdown
 import os
+import sys
 from six.moves import urllib
 
 manifest = require('nodepy-pm/lib/manifest')
@@ -38,7 +39,9 @@ require('./sass')(app, force=app.debug)
 
 # Initialize the Jinja environment globals and filters..
 app.jinja_env.globals.update({
-  '__version__': str(manifest.parse(os.path.join(__directory__, '../package.json')).version),
+  'VERSION': str(manifest.parse(os.path.join(__directory__, '../package.json')).version),
+  'PY_VERSION': sys.implementation.name + ' ' + '.'.join(map(str, sys.version_info)),
+  'FLASK_VERSION': flask.__version__,
   'active': lambda v, x: jinja2.Markup('class="active"') if v == x else '',
   'User': models.User,
   'Package': models.Package,
