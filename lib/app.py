@@ -21,7 +21,7 @@
 import flask
 import jinja2
 import json
-import markdown
+import markupsafe
 import os
 import sys
 from six.moves import urllib
@@ -56,7 +56,7 @@ app.jinja_env.globals.update({
 })
 
 app.jinja_env.filters.update({
-  'markdown': lambda x: markdown().convert(x),
+  'markdown': lambda x: markupsafe.Markup(markdown().convert(x)),
   'sizeof_fmt': utils.sizeof_fmt,
   'pygmentize': utils.pygmentize
 })

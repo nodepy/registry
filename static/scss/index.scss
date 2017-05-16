@@ -4,6 +4,8 @@
 
 /* Variables */
 $padding: 20px;
+$font-size: 14px;
+$line-height: $font-size*1.5;
 
 $font-title: 'Open Sans', sans-serif;
 $font-body: 'Roboto', sans-serif;
@@ -18,9 +20,9 @@ $header-bg-alt: #861818;
 $header-height: 40px;
 $header-fg: white;
 
-$nav-item-height: 30px;
-
 $link-color: #3af;
+$nav-item-height: 30px;
+$footer-padding: $padding;
 
 /* General */
 html, body {
@@ -29,7 +31,8 @@ html, body {
 }
 
 body {
-  font: 14px $font-body;
+  font: $font-size $font-body;
+  line-height: $line-height;
   color: $primary-fg;
   background-color: $primary-bg;
   display: flex;
@@ -82,7 +85,7 @@ header a:hover {
 
 /* Footer */
 footer {
-  padding: $padding;
+  padding: $footer-padding;
   background-color: $primary-bg-alt;
   border-top: 5px solid $primary-bg-alt2;
 
