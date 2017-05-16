@@ -52,23 +52,8 @@ a, a:hover, a:focus {
 }
 
 pre, pre code {
+  color: #dddddd;
   background-color: $monokai-bg;
-}
-
-.squashed-title {
-  display: block;
-  float: left;
-  font: 350% $font-title;
-  font-weight: bold;
-
-  &.left {
-    float: left;
-    margin: 0 $padding $padding 0;
-  }
-  &.right {
-    float: right;
-    margin: 00 $padding $padding;
-  }
 }
 
 /* Header */
