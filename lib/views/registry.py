@@ -40,11 +40,6 @@ def info():
   return render_template('registry/info.html', nav='index')
 
 
-@app.route('/search')
-def search():
-  abort(404)  # Not Implemented
-
-
 @app.route('/browse')
 @app.route('/browse/package/<package>')
 @app.route('/browse/package/@<scope>/<package>')

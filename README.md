@@ -52,12 +52,9 @@ __General__
   to `/packages` and `/packages/...`
 - change user browsing url from `/browse/users` and `/browse/users/...`
   to `/users` and `/users/...`
-
-__Template__
-
-- Stick footer to bottom
-- Show active page category by darker background in the menu
-- Fix display of package description and license on the User page
+- Node.py Documentation is now integrated into the Web Application
+- Add `@nodepy/spdx-licenses` module and display OSI approved icon with
+  the license identifier, when applicable
 
 ### v0.0.4
 

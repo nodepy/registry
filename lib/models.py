@@ -30,6 +30,7 @@ from mongoengine import *
 config = require('../config')
 email = require('./email')
 semver = require('nodepy-pm/lib/semver')
+licenses = require('@nodepy/spdx-licenses')
 
 # Note: if you experience extremly long load times, it might be because
 # the mongo host can not be reached.
@@ -118,6 +119,34 @@ class PackageVersion(Document):
       except json.JSONDecodeError:
         self._manifest_json = None
     return self._manifest_json
+
+  @property
+  def license(self):
+    """
+    Reads the license information from the manifest and returns a dictionary
+    with the license information. Additionally to the standard fields "name",
+    "identifier", "deprecated" and "osi_approved", it also contains a "url"
+    field which points to the license description. The field is empty if the
+    license identiifer in the manifest is unknown.
+    """
+
+    if not self.manifest_json:
+      return None
+    ident = self.manifest_json.get('license')
+    if not ident:
+      return None
+
+    # TODO: Hashtable..?
+    for lic in licenses:
+      if lic['identifier'] == ident:
+        break
+    else:
+      return {'name': ident, 'identifier': ident, 'deprecated': False,
+              'osi_approved': False, 'url': None}
+
+    lic = lic.copy()
+    lic['url'] = 'https://spdx.org/licenses/{}.html'.format(lic['identifier'])
+    return lic
 
   def add_file(self, filename):
     if filename not in self.files:

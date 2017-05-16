@@ -4,3 +4,6 @@
 [submodule "_vendor/werkzeug-reloader-patch"]
 	path = _vendor/werkzeug-reloader-patch
 	url = https://github.com/nodepy/werkzeug-reloader-patch.git
+[submodule "_vendor/spdx-licenses"]
+	path = _vendor/spdx-licenses
+	url = git@github.com:nodepy/spdx-licenses.git

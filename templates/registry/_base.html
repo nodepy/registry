@@ -47,7 +47,7 @@
         <hr/>
         {% endblock %}
         {% block nav_search %}
-        <form id="search" action="{{url_for('search')}}">
+        <form id="search" action="{{url_for('packages')}}">
           <input name="q" placeholder="Find Packages..." value="{{request.args.get('q', '')}}">
           <button type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
         </form>

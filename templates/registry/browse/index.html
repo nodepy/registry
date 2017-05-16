@@ -18,7 +18,10 @@
           <td><a href="{{ url_for('package', package=pkg.name) }}">{{ pkg.name }}</a></td>
           <td>{{ pkg.latest.version if pkg.latest else '' }}</td>
           <td>{{ pkg.latest.manifest_json.description if pkg.latest else '-' }}</td>
-          <td>{{ pkg.latest.manifest_json.license if pkg.latest else '' }}</td>
+          <td>
+            <a href="{{ pkg.latest.license.url }}">{{ pkg.latest.license.identifier }}</a>
+            {% if pkg.latest.license.osi_approved %}<img class="osi" src="{{static('img/osi.svg')}}"><sup>&reg;</sup>{% endif %}
+          </td>
           <td><a href="{{ url_for('user', user=pkg.owner.name) }}">{{ pkg.owner.name }}</a></td>
         </tr>
         {% endfor %}
