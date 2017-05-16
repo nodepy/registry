@@ -20,7 +20,7 @@
 
 import os
 import yaml
-from flask import abort, request, render_template, Response
+from flask import abort, redirect, request, render_template, Response
 
 app = require('../app')
 models = require('../models')
@@ -46,14 +46,29 @@ def search():
 
 
 @app.route('/browse')
-def browse():
-  return render_template('registry/browse/index.html', nav='browse')
-
-
 @app.route('/browse/package/<package>')
 @app.route('/browse/package/@<scope>/<package>')
 @app.route('/browse/package/<package>/<version>')
 @app.route('/browse/package/@<scope>/<package>/<version>')
+def __browse_packages_backwards_compat(**kwargs):
+  return redirect(request.path.replace('/package', '').replace('/browse', '/packages'))
+
+
+@app.route('/browse/users')
+@app.route('/browse/users/<user>')
+def __browse_users__backwards_compat(**kwargs):
+  return redirect(request.path.replace('/browse', ''))
+
+
+@app.route('/packages')
+def packages():
+  return render_template('registry/browse/index.html', nav='packages')
+
+
+@app.route('/packages/<package>')
+@app.route('/packages/@<scope>/<package>')
+@app.route('/packages/<package>/<version>')
+@app.route('/packages/@<scope>/<package>/<version>')
 def package(package, scope=None, version=None):
   package = Package.objects(name=str(refstring.Package(scope, package))).first()
   if not package:
@@ -65,15 +80,15 @@ def package(package, scope=None, version=None):
   else:
     version = package.latest
   return render_template('registry/browse/package.html',
-      package=package, version=version, nav='browse')
+      package=package, version=version, nav='packages')
 
 
-@app.route('/browse/users')
+@app.route('/users')
 def users():
   return render_template('registry/browse/users.html', nav='users')
 
 
-@app.route('/browse/users/<user>')
+@app.route('/users/<user>')
 def user(user):
   user = User.objects(name=user).first()
   if not user:

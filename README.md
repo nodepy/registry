@@ -33,12 +33,7 @@ Update `config.py` and start the server.
 
     $ nodepy server
 
-## Todolist
-
-- Test sending of emails (for user email verification)
-- Frontend search functionality
-- User management API (change of password, email, etc. for the `nodepy-pm`
-  command-line).
+See also: [Registry Front Page](resources/index.md)
 
 ## Changelog
 
@@ -53,6 +48,10 @@ __General__
 - another restyling
 - now using SASS (see the `static/scss` directory)
 - add a search form (view not yet implemented)
+- change package browsing url from `/browse/packages` and `/browse/package/...`
+  to `/packages` and `/packages/...`
+- change user browsing url from `/browse/users` and `/browse/users/...`
+  to `/users` and `/users/...`
 
 __Template__
 

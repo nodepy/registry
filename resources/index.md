@@ -1,44 +1,42 @@
-<img src="https://i.imgur.com/IfmOKFI.png" align="right" width="150px"></img>
+# Build awesome Python applications
 
-## The **Node.py** Package Registry
+### with Node.py
+
+**Node.py** is a Python runtime layer that is inspired by **Node.js**. It
+allows you to create modular, easily distributable and reproducible Python
+applications in the **Node.js** style. Node.py comes batteries included with
+its  package manager **nodepy-pm** which allows you to manage Node.py and
+standard Python packages for your project. No virtualenv required!
+
+Node.py is supported on all major platforms that [CPython] can run on. 
 
   [nodepy]: https://github.com/nodepy/nodepy
+  [CPython]: https://python.org/
 
-Welcome to the nodepy package registry, the repository for [nodepy] packages.
-**nodepy** is a Python runtime layer that is inspired by **Node.js**. It
-allows you to create well structured, easily distributable and reproducible
-Python applications.
+## Installing Node.py
 
-### Key Features of Node.py
-
-- The power of *Node.js*'s `require()` in Python
-- Compatible with Python 2.7 and 3.3+
-- Batteries included: the **nodepy-pm** package manager allows you to install
-  and manage dependencies
-- Standard Python modules are supported and it is *encouraged* to use them
-
-### Installation
-
-You can install **nodepy** via Pip. This will automatically install the
-`nodepy` and `nodepy-pm` commands.
+You can install Node.py via Pip, which will also install nodepy-pm.
 
     $ pip install node.py
 
-If you pass the `--user` option, make sure that the user scripts directory
-is in your `PATH` (eg. `~/.local/bin` on Linux, `~/.local/Scripts` or
-`~/AppData/Local/Programs/Python/PythonX.Y/Scripts` on Windows).
+To get started, try something like this:
 
-It is also recommended to add the path `nodepy_modules/.bin` to your
-`PATH` environment variables, so that you will be able to run scripts
-installed locally via **nodepy-pm**.
+    $ nodepy-pm install @nodepy/hello
+    $ nodepy @nodepy/hello
+    Hello from Node.py!
+    $ export PATH=$PATH:nodepy_modules/.bin
+    $ nodepy-hello
+    Hello from Node.py!
 
-    $ echo 'export PATH="PATH:nodepy_modules/.bin"' >> ~/.profile
+## Todo
 
-### Todo
-
-- Implement package search functionality (currently the form in the sidebar
-  is only a placeholder)
-- Caching for HTML generated from Markdown (especially the main and
-  documentation pages)
-- Generate CSS from SASS on startup in production mode
-- \+ everything else listed in the [Issue Tracker](https://github.com/nodepy/registry/issues)
+- Implement search form (currently a placeholder)
+- Caching for HTML content generated from Markdown
+- Caching for CSS generated from SCSS
+- Account management API (for the **nodepy-pm** command-line)
+- Web-login and registration for users
+- Option to require log-in to view registry content (useful for private registry hosting)
+- Display TOC in Documentation pages
+- Track download count of packages
+- Ability to deprecate whole packages (and package manager will recieve this
+  information via the API)
