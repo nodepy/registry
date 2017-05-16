@@ -23,6 +23,7 @@ $header-fg: white;
 $link-color: #3af;
 $nav-item-height: 30px;
 $footer-padding: $padding;
+$monokai-bg: #272822;
 
 /* General */
 html, body {
@@ -48,6 +49,10 @@ h1, h2, h3, h3, h4, h5, h6 {
 a, a:hover, a:focus {
   text-decoration: none;
   color: inherit;
+}
+
+pre, pre code {
+  background-color: $monokai-bg;
 }
 
 .squashed-title {
