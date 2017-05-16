@@ -1,0 +1,24 @@
+{% extends "registry/_base.html" %}
+
+{% macro render_nav(pages) %}
+  {% for page in pages %}
+    <li {% if page.path == active_page %}class="active"{% endif %}>
+      <a {% if page.path is not none %}href="{{url_for('docs', path=page.path)}}"{% endif %}>{{page.name}}</a>
+    </li>
+    {% if page.subs %}
+      <ul>
+        {{ render_nav(page.subs) }}
+      </ul>
+    {% endif %}
+  {% endfor %}
+{% endmacro %}
+
+{% block nav_links %}
+<ul>
+  <h3>Node.py Documentation</h3>
+  {{ render_nav(pages) }}
+</ul>
+{% endblock %}
+{% block content %}
+{{ content|markdown }}
+{% endblock %}

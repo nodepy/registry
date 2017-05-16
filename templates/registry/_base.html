@@ -36,22 +36,27 @@
     </header>
     <main class="row">
       <nav class="col col-2">
-        {% block above_nav %}
-        <h1>The Node.py Package Registry</h1>
+        {% block nav_brand %}
+        <h1><a href="{{url_for('index')}}">The Node.py Package Registry</a></h1>
         <hr/>
+        {% endblock %}
+        {% block nav_search %}
         <form id="search" action="{{url_for('search')}}">
           <input name="q" placeholder="Find Packages..." value="{{request.args.get('q', '')}}">
           <button type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
         </form>
         <hr/>
-        {% endblock above_nav %}
+        {% endblock %}
+        {% block nav_links %}
         <ul>
-          <li><a href="{{url_for('browse')}}">browse packages</a></li>
-          <li><a href="{{url_for('users')}}">browse users</a></li>
-          <li><a href="https://nodepy.github.io/nodepy">browse documentation</a></li>
+          <h3>Registry</h3>
+          <li class="{{active('browse')}}"><a href="{{url_for('browse')}}">Packages</a></li>
+          <li class="{{active('users')}}"><a href="{{url_for('users')}}">Users</a></li>
+          <li><a href="{{url_for('docs')}}">Documentation</a></li>
         </ul>
-        {% block below_nav %}
-        {% endblock below_nav %}
+        {% endblock %}
+        {% block nav_bottom %}
+        {% endblock %}
         <span class="smaller">
           {% if not config.accept_registrations %}
           <em>Note: new registrations are closed.</em>

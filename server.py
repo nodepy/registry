@@ -26,6 +26,7 @@ models = require('./lib/models')
 app = require('./lib/app')
 require('./lib/views/api')
 require('./lib/views/browse')
+require('./lib/views/docs')
 require('@nodepy/werkzeug-reloader-patch').install()
 
 def main():

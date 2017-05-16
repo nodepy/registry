@@ -18,6 +18,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+import os
+import yaml
 from flask import abort, request, render_template, Response
 
 app = require('../app')
@@ -41,6 +43,7 @@ def info():
 @app.route('/search')
 def search():
   abort(404)  # Not Implemented
+
 
 @app.route('/browse')
 def browse():
@@ -103,12 +106,3 @@ def page_not_found(e):
 @app.errorhandler(500)
 def page_not_found(e):
   return Response(render_template('registry/500.html'), 500)
-
-
-@app.route('/docs/latest')
-def docs():
-  """
-  This route should be served by NGinx or Apache.
-  """
-
-  return "This route should be served by a real webserver."

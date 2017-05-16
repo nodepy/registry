@@ -126,6 +126,10 @@ main > nav {
 
   ul li {
     line-height: $nav-item-height;
+
+    &.active a {
+      font-weight: bold;
+    }
   }
 
   #search {
