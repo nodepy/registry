@@ -137,6 +137,29 @@ main > nav {
   ul li {
     line-height: $nav-item-height;
   }
+
+  #search {
+    display: flex;
+    margin-bottom: 1em;
+
+    input, button {
+      border: 1px solid $header-bg-alt;
+      border-radius: 0;
+      padding: 0;
+      margin: 0;
+      background-color: rgba(255, 255, 255, 0.6);
+    }
+
+    input {
+      padding: 0 1em;
+    }
+
+    button {
+      color: black;
+      padding: 0 1em;
+      border-left: none;
+    }
+  }
 }
 
 main > article {

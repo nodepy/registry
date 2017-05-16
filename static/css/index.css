@@ -85,6 +85,21 @@ main > nav {
     color: white; }
   main > nav ul li {
     line-height: 30px; }
+  main > nav #search {
+    display: flex;
+    margin-bottom: 1em; }
+    main > nav #search input, main > nav #search button {
+      border: 1px solid #861818;
+      border-radius: 0;
+      padding: 0;
+      margin: 0;
+      background-color: rgba(255, 255, 255, 0.6); }
+    main > nav #search input {
+      padding: 0 1em; }
+    main > nav #search button {
+      color: black;
+      padding: 0 1em;
+      border-left: none; }
 
 main > article {
   padding: 20px;

@@ -38,6 +38,10 @@ def info():
   return render_template('registry/info.html', nav='index')
 
 
+@app.route('/search')
+def search():
+  abort(404)  # Not Implemented
+
 @app.route('/browse')
 def browse():
   return render_template('registry/browse/index.html', nav='browse')

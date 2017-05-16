@@ -24,6 +24,11 @@
         {% block above_nav %}
         <h1>The Node.py Package Registry</h1>
         <hr/>
+        <form id="search" action="{{url_for('search')}}">
+          <input name="q" placeholder="Find Packages..." value="{{request.args.get('q', '')}}">
+          <button type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+        </form>
+        <hr/>
         {% endblock above_nav %}
         <ul>
           <li><a href="{{url_for('browse')}}">browse packages</a></li>

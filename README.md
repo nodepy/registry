@@ -50,6 +50,9 @@ __General__
 - include `werkzeug-reloader-patch` and `nodepy` (which contains `nodepy-pm`
   as submodule
 - configuration is now done in `config.py` instead of `~/.ppymrc`
+- another restyling
+- now using SASS (see the `static/scss` directory)
+- add a search form (view not yet implemented)
 
 __Template__
 
