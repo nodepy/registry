@@ -1,33 +1,25 @@
 {% extends "registry/_base.html" %}
 
 {% macro render_nav(pages) %}
+  <ul>
   {% for page in pages %}
     <li {% if page.path == active_page %}class="active"{% endif %}>
       <a {% if page.path is not none %}href="{{url_for('docs', path=page.path)}}"{% endif %}>{{page.name}}</a>
     </li>
     {% if page.subs %}
-      <ul>
-        {{ render_nav(page.subs) }}
-      </ul>
+      {{ render_nav(page.subs) }}
     {% endif %}
   {% endfor %}
+  </ul>
 {% endmacro %}
 
 {% block nav_links %}
-<ul>
   <h3>Node.py Documentation</h3>
   {{ render_nav(pages) }}
-</ul>
+  <hr/>
+  <h3>Table of Contents</h3>
+  {{ toc|safe }}
 {% endblock %}
-{% block content_outter %}
-<article class="col col-2 toc">
-  <nav>
-    <p><i class="fa fa-file-text-o" aria-hidden="true"></i> &nbsp; {{ page.name }}</p>
-    <h4>Table of Contents</h4>
-    {{ toc|safe }}
-  </nav>
-</article>
-<article class="col col-8">
+{% block content %}
   {{ content|safe }}
-</article>
 {% endblock %}

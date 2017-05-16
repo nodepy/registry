@@ -20,6 +20,8 @@ $header-bg-alt: #861818;
 $header-height: 40px;
 $header-fg: white;
 
+$sidebar-width: 250px;
+$sidebar-max-screen-width: 750px;
 $link-color: #3af;
 $nav-item-height: 30px;
 $footer-padding: $padding;
@@ -41,7 +43,7 @@ body {
   flex-direction: column;
 }
 
-h1, h2, h3, h3, h4, h5, h6 {
+h1, h2, h3, h4, h5, h6 {
   color: inherit;
   font-family: $font-title;
 }
@@ -73,8 +75,21 @@ header a:hover {
   font-weight: bold;
 }
 
+#sidebar-toggle {
+  float: right;
+  background-color: $header-bg;
+  border-radius: 0;
+  padding: .5em 1em;
+  background-color: rgba(255, 255, 255, 0.1);
+
+  @media (min-width: $sidebar-max-screen-width) {
+    display: none;
+  }
+}
+
 /* Footer */
 footer {
+  display: flex;
   padding: $footer-padding;
   background-color: $primary-bg-alt;
   border-top: 2px solid $primary-bg-alt2;
@@ -95,19 +110,35 @@ footer {
       margin-left: 1em;
       list-style: none;
     }
+    li:first-child {
+      margin-left: 0;
+    }
   }
+
+  @media (max-width: $sidebar-max-screen-width) {
+    flex-direction: column;
+    line-height: $nav-item-height;
+  }
+
 }
 
 /* Main */
 main {
   flex: 1;
+  display: flex;
+
+  @media (max-width: $sidebar-max-screen-width) {
+    display: block;
+  }
 
   a, a:hover, a:focus {
     color: $link-color;
   }
 }
 
-main > nav {
+main .sidebar {
+  min-width: $sidebar-width;
+  max-width: $sidebar-width;
   display: flex;
   flex-direction: column;
   color: $header-fg;
@@ -115,8 +146,20 @@ main > nav {
   background-color: $header-bg;
   border-right: 2px solid $header-bg-alt;
 
-  > *:nth-last-child(2) {
-    flex: 1;
+  @media (max-width: $sidebar-max-screen-width) {
+    display: none;
+    min-width: none;
+    max-width: none;
+  }
+}
+
+main nav {
+  hr {
+    margin-top: 1em;
+  }
+
+  h3 {
+    margin-top: 0;
   }
 
   a, a:hover, a:focus {
@@ -130,57 +173,38 @@ main > nav {
       font-weight: bold;
     }
   }
+}
 
-  #search {
-    display: flex;
-    margin-bottom: 1em;
+main #search {
+  display: flex;
+  margin-bottom: 0;
 
-    input, button {
-      border: 1px solid $header-bg-alt;
-      border-radius: 0;
-      padding: 0;
-      margin: 0;
-      background-color: rgba(255, 255, 255, 0.6);
-    }
+  input, button {
+    border: 1px solid $header-bg-alt;
+    border-radius: 0;
+    padding: 0;
+    margin: 0;
+    background-color: rgba(255, 255, 255, 0.6);
+  }
 
-    input {
-      padding: 0 1em;
-    }
+  input {
+    padding: 0 1em;
+  }
 
-    button {
-      color: black;
-      padding: 0 1em;
-      border-left: none;
-    }
+  button {
+    color: black;
+    padding: 0 1em;
+    border-left: none;
   }
 }
 
-main > article {
+main .flex2ndlast {
+  > *:nth-last-child(2) {
+    flex: 1;
+  }
+}
+
+main .content {
   padding: $padding;
   color: black;
-}
-
-main > article.toc {
-  color: white;
-  background-color: $primary-bg-alt;
-  border-right: 2px solid $primary-bg-alt2;
-
-  nav {
-    > ul {
-      margin-bottom: 1em;
-    }
-
-    ul li {
-      list-style: none;
-
-      a {
-        color: white;
-        line-height: $nav-item-height;
-      }
-
-      &.active a {
-        font-weight: bold;
-      }
-    }
-  }
 }

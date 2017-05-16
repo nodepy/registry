@@ -32,10 +32,16 @@
           The Node.py Package Registry
         </a>
         <sub>&ndash; inspired by <a href="https://npmjs.org/">npm</a></sub>
+        <button id="sidebar-toggle"><i class="fa fa-bars" aria-hidden="true"></i></button>
+        <script>
+          $("#sidebar-toggle").click(() => {
+            $('main nav.sidebar').slideToggle()
+          })
+        </script>
       </span>
     </header>
-    <main class="row">
-      <nav class="col col-2">
+    <main>
+      <nav class="sidebar flex2ndlast">
         {% block nav_brand %}
         <h1><a href="{{url_for('index')}}">The Node.py Package Registry</a></h1>
         <hr/>
@@ -48,8 +54,8 @@
         <hr/>
         {% endblock %}
         {% block nav_links %}
+        <h3>Registry</h3>
         <ul>
-          <h3>Registry</h3>
           <li class="{{active('packages')}}"><a href="{{url_for('packages')}}">Packages</a></li>
           <li class="{{active('users')}}"><a href="{{url_for('users')}}">Users</a></li>
           <li><a href="{{url_for('docs')}}">Documentation</a></li>
@@ -64,13 +70,13 @@
         </span>
       </nav>
       {% block content_outter %}
-      <article class="col col-10">
+      <article class="content">
         {% block content %}
         {% endblock %}
       </article>
       {% endblock %}
     </main>
-    <footer class="row">
+    <footer>
       <span class="version">
         <a href="https://github.com/nodepy/registry">@nodepy/registry</a> v{{VERSION}}
       </span>
