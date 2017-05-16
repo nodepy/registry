@@ -33,3 +33,12 @@ It is also recommended to add the path `nodepy_modules/.bin` to your
 installed locally via **nodepy-pm**.
 
     $ echo 'export PATH="PATH:nodepy_modules/.bin"' >> ~/.profile
+
+### Todo
+
+- Implement package search functionality (currently the form in the sidebar
+  is only a placeholder)
+- Caching for HTML generated from Markdown (especially the main and
+  documentation pages)
+- Generate CSS from SASS on startup in production mode
+- \+ everything else listed in the [Issue Tracker](https://github.com/nodepy/registry/issues)
