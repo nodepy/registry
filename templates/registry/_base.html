@@ -63,10 +63,12 @@
           {% endif %}
         </span>
       </nav>
+      {% block content_outter %}
       <article class="col col-10">
         {% block content %}
         {% endblock %}
-      </div>
+      </article>
+      {% endblock %}
     </main>
     <footer class="row">
       <span class="version">

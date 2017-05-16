@@ -19,6 +19,15 @@
   {{ render_nav(pages) }}
 </ul>
 {% endblock %}
-{% block content %}
-{{ content|markdown }}
+{% block content_outter %}
+<article class="col col-2 toc">
+  <nav>
+    <p><i class="fa fa-file-text-o" aria-hidden="true"></i> &nbsp; {{ page.name }}</p>
+    <h4>Table of Contents</h4>
+    {{ toc|safe }}
+  </nav>
+</article>
+<article class="col col-8">
+  {{ content|safe }}
+</article>
 {% endblock %}

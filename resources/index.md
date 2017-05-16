@@ -36,7 +36,7 @@ To get started, try something like this:
 - Account management API (for the **nodepy-pm** command-line)
 - Web-login and registration for users
 - Option to require log-in to view registry content (useful for private registry hosting)
-- Display TOC in Documentation pages
+- Have nav page scrolling so it's always visible
 - Track download count of packages
 - Ability to deprecate whole packages (and package manager will recieve this
   information via the API)

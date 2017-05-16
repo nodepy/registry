@@ -21,9 +21,10 @@
 import collections
 import os
 import yaml
-from flask import abort, render_template
+from flask import abort, request, render_template
 
 app = require('../app')
+markdown = require('../markdown')
 basedir = os.path.join(app.root_path, '_vendor/nodepy/docs')
 
 def _load_pages():
@@ -48,6 +49,16 @@ def _load_pages():
 pages = _load_pages()
 
 
+def find_page(path, pages=None):
+  if pages is None:
+    pages = globals()['pages']
+  for p in pages:
+    if p.path == path: return p
+    s = find_page(path, p.subs)
+    if s: return s
+  return None
+
+
 @app.route('/docs/')
 @app.route('/docs/<path:path>')
 def docs(path=''):
@@ -56,8 +67,12 @@ def docs(path=''):
     filename = os.path.join(filename, 'index.md')
   else:
     filename += '.md'
+  # Find the active page.
+  page = find_page(path)
   if os.path.isfile(filename):
     with open(filename, 'r') as fp:
-      return render_template('registry/docs.html',
-        content=fp.read(), pages=pages, active_page=path)
+      md = markdown()
+      content = md.convert(fp.read())
+  return render_template('registry/docs.html',
+    content=content, toc=md.toc, pages=pages, active_page=path, page=page)
   abort(404)
