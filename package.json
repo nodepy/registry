@@ -9,7 +9,7 @@
     "python": ">=2.7.0 || >=3.3.0"
   },
   "dependencies": {
-    "@nodepy/pm": "-e _vendor/nodepy/nodepy-pm",
+    "@nodepy/pm": "-e _vendor/nodepy/@nodepy/pm",
     "@nodepy/werkzeug-reloader-patch": "-e _vendor/werkzeug-reloader-patch",
     "@nodepy/spdx-licenses": "-e _vendor/spdx-licenses"
   },
