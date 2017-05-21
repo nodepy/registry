@@ -38,10 +38,10 @@ app = require('../app')
 httpauth = require('../httpauth')
 decorators = require('../decorators')
 models = require('../models')
-manifest = require('nodepy-pm/lib/manifest')
-semver = require('nodepy-pm/lib/semver')
-refstring = require('nodepy-pm/lib/refstring')
-registry_client = require('nodepy-pm/lib/registry')
+manifest = require('@nodepy/pm/lib/manifest')
+semver = require('@nodepy/pm/lib/semver')
+refstring = require('@nodepy/pm/lib/refstring')
+registry_client = require('@nodepy/pm/lib/registry')
 
 User, Package, PackageVersion = models.User, \
     models.Package, models.PackageVersion

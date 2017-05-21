@@ -27,7 +27,6 @@ app = require('./lib/app')
 require('./lib/views/api')
 require('./lib/views/docs')
 require('./lib/views/registry')
-require('@nodepy/werkzeug-reloader-patch').install()
 
 def main():
   if models.CURRENT_REVISION is None:

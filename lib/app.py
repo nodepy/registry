@@ -26,7 +26,7 @@ import os
 import sys
 from six.moves import urllib
 
-manifest = require('nodepy-pm/lib/manifest')
+manifest = require('@nodepy/pm/lib/manifest')
 models = require('./models')
 resources = require('./resources')
 utils = require('./utils')
