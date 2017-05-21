@@ -23,9 +23,10 @@ import os
 import yaml
 from flask import abort, request, render_template
 
-app = require('../app')
-markdown = require('../markdown')
+import app from '../app'
+import markdown from '../markdown'
 basedir = os.path.join(app.root_path, '_vendor/nodepy/docs')
+
 
 def _load_pages():
   Page = collections.namedtuple('Page', 'name path subs')

@@ -22,12 +22,9 @@ import os
 import yaml
 from flask import abort, redirect, request, render_template, Response
 
-app = require('../app')
-models = require('../models')
-refstring = require('@nodepy/pm/lib/refstring')
-
-User, Package, PackageVersion = models.User, \
-    models.Package, models.PackageVersion
+import app from '../app'
+import models, {User, Package, PackageVersion} from '../models'
+import refstring from '@nodepy/pm/lib/refstring'
 
 
 @app.route('/')

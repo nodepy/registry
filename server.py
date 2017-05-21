@@ -21,12 +21,13 @@
 import os
 import sys
 
-config = require('./config')
-models = require('./lib/models')
-app = require('./lib/app')
-require('./lib/views/api')
-require('./lib/views/docs')
-require('./lib/views/registry')
+import config from './config'
+import models from './lib/models'
+import app from './lib/app'
+import './lib/views/api'
+import './lib/views/docs'
+import './lib/views/registry'
+
 
 def main():
   if models.CURRENT_REVISION is None:

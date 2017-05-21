@@ -25,6 +25,7 @@
     "mongoengine": ">=0.11.0"
   },
   "extensions": [
+    "!require-import-syntax",
     "@nodepy/werkzeug-reloader-patch"
   ]
 }

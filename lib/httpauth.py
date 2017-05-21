@@ -19,7 +19,8 @@
 # THE SOFTWARE.
 
 from flask_httpauth import HTTPBasicAuth
-models = require('./models')
+import models from './models'
+
 auth = HTTPBasicAuth()
 
 

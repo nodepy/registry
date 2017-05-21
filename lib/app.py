@@ -26,16 +26,17 @@ import os
 import sys
 from six.moves import urllib
 
-manifest = require('@nodepy/pm/lib/manifest')
-models = require('./models')
-resources = require('./resources')
-utils = require('./utils')
-markdown = require('./markdown')
+import manifest from '@nodepy/pm/lib/manifest'
+import models from './models'
+import resources from './resources'
+import utils from './utils'
+import markdown from './markdown'
+import sass from './sass'
 
 app = flask.Flask('nodepy-registry', template_folder=os.path.join(__directory__, '../templates'))
 app.debug = require('../config').debug
 app.config['TEMPLATES_AUTO_RELOAD'] = True
-require('./sass')(app, force=app.debug)
+sass(app, force=app.debug)
 
 # Initialize the Jinja environment globals and filters..
 app.jinja_env.globals.update({

@@ -22,7 +22,7 @@ import click
 from smtplib import SMTP, SMTP_SSL
 from email.mime.text import MIMEText
 
-config = require('../config')
+import config from '../config'
 
 
 def make_smtp():

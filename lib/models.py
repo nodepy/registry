@@ -27,10 +27,10 @@ from datetime import datetime
 from hashlib import sha512
 from mongoengine import *
 
-config = require('../config')
-email = require('./email')
-semver = require('@nodepy/pm/lib/semver')
-licenses = require('@nodepy/spdx-licenses')
+import config from '../config'
+import email from './email'
+import semver from '@nodepy/pm/lib/semver'
+import licenses from '@nodepy/spdx-licenses'
 
 # Note: if you experience extremly long load times, it might be because
 # the mongo host can not be reached.

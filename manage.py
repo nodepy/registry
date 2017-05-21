@@ -23,10 +23,10 @@ import os
 import shutil
 import sys
 
-models = require('./lib/models')
-semver = require('nodepy-pm/lib/semver')
-refstring = require('nodepy-pm/lib/refstring')
-config = require('./config')
+import models from './lib/models'
+import semver from 'nodepy-pm/lib/semver'
+import refstring from 'nodepy-pm/lib/refstring'
+import config from './config'
 
 
 def prompt(question):

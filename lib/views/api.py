@@ -31,21 +31,17 @@ import tempfile
 from flask import request
 from flask_restful import Resource, Api
 
-fs = require('../fs')
-config = require('../../config')
-resources = require('../resources')
-app = require('../app')
-httpauth = require('../httpauth')
-decorators = require('../decorators')
-models = require('../models')
-manifest = require('@nodepy/pm/lib/manifest')
-semver = require('@nodepy/pm/lib/semver')
-refstring = require('@nodepy/pm/lib/refstring')
-registry_client = require('@nodepy/pm/lib/registry')
-
-User, Package, PackageVersion = models.User, \
-    models.Package, models.PackageVersion
-
+import fs from '../fs'
+import config from '../../config'
+import resources from '../resources'
+import app from '../app'
+import httpauth from '../httpauth'
+import decorators from '../decorators'
+import models, { User, Package, PackageVersion } from '../models'
+import manifest from '@nodepy/pm/lib/manifest'
+import semver from '@nodepy/pm/lib/semver'
+import refstring from '@nodepy/pm/lib/refstring'
+import registry_client from '@nodepy/pm/lib/registry'
 
 api = Api(app)
 
