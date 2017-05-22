@@ -63,17 +63,17 @@ def find_page(path, pages=None):
 @app.route('/docs/')
 @app.route('/docs/<path:path>')
 def docs(path=''):
+  page = find_page(path)
+  if not page: abort(404)
   filename = os.path.join(app.root_path, basedir, path)
   if os.path.isdir(filename):
     filename = os.path.join(filename, 'index.md')
   else:
     filename += '.md'
   # Find the active page.
-  page = find_page(path)
   if os.path.isfile(filename):
     with open(filename, 'r') as fp:
       md = markdown()
       content = md.convert(fp.read())
   return render_template('registry/docs.html',
     content=content, toc=md.toc, pages=pages, active_page=path, page=page)
-  abort(404)
