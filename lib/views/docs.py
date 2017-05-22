@@ -43,7 +43,7 @@ def _load_pages():
         path = path.path.rstrip('index').rstrip('/')
     else:
       subs = []
-      path = value.rstrip('.md')
+      path = value.rstrip('.md').rstrip('index')
     return Page(key, path, subs)
   return [convert(c) for c in pages]
 
