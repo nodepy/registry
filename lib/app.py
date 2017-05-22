@@ -27,7 +27,7 @@ import sys
 import time
 from six.moves import urllib
 
-import manifest from '@nodepy/pm/lib/manifest'
+import manifest from '@nodepy/nppm/lib/manifest'
 import models from './models'
 import resources from './resources'
 import utils from './utils'

@@ -24,8 +24,8 @@ import shutil
 import sys
 
 import models from './lib/models'
-import semver from 'nodepy-pm/lib/semver'
-import refstring from 'nodepy-pm/lib/refstring'
+import semver from 'nppm/lib/semver'
+import refstring from 'nppm/lib/refstring'
 import config from './config'
 
 

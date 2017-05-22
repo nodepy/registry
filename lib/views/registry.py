@@ -24,7 +24,7 @@ from flask import abort, redirect, request, render_template, Response
 
 import app from '../app'
 import models, {User, Package, PackageVersion} from '../models'
-import refstring from '@nodepy/pm/lib/refstring'
+import refstring from '@nodepy/nppm/lib/refstring'
 
 
 @app.route('/')

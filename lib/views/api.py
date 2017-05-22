@@ -38,10 +38,10 @@ import app from '../app'
 import httpauth from '../httpauth'
 import decorators from '../decorators'
 import models, { User, Package, PackageVersion } from '../models'
-import manifest from '@nodepy/pm/lib/manifest'
-import semver from '@nodepy/pm/lib/semver'
-import refstring from '@nodepy/pm/lib/refstring'
-import registry_client from '@nodepy/pm/lib/registry'
+import manifest from '@nodepy/nppm/lib/manifest'
+import semver from '@nodepy/nppm/lib/semver'
+import refstring from '@nodepy/nppm/lib/refstring'
+import registry_client from '@nodepy/nppm/lib/registry'
 
 api = Api(app)
 

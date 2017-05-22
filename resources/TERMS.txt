@@ -2,7 +2,7 @@
 #               nodepy package registry -- Terms and Licenses                #
 ==============================================================================
 
-License terms and notices for the nodepy and nodepy-pm command-line programs
+License terms and notices for the nodepy and nppm command-line programs
 can be found in the LICENSE.txt file of the project's source code at
 https://www.github.com/nodepy/nodepy.
 

@@ -29,7 +29,7 @@ from mongoengine import *
 
 import config from '../config'
 import email from './email'
-import semver from '@nodepy/pm/lib/semver'
+import semver from '@nodepy/nppm/lib/semver'
 import licenses from '@nodepy/spdx-licenses'
 
 # Note: if you experience extremly long load times, it might be because

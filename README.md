@@ -22,12 +22,12 @@ registry as well.
 ## Installation & Deployment
 
 Clone the repository with submodules. Install the dependencies with
-**nodepy-pm**. The dependencies can be installed without connecting to
+**nppm**. The dependencies can be installed without connecting to
 [ppym.org] as they are included as submodule.s
 
     $ git clone https://github.com/nodepy/registry.git --recursive
     $ cd registry
-    $ nodepy-pm install
+    $ nppm install
 
 Update `config.py` and start the server.
 
@@ -42,7 +42,7 @@ See also: [Registry Front Page](resources/index.md)
 __General__
 
 - rename from `ppym-registry` to just `registry` and package name to `@nodepy/registry`
-- include `werkzeug-reloader-patch` and `nodepy` (which contains `nodepy-pm`
+- include `werkzeug-reloader-patch` and `nodepy` (which contains `nppm`
   as submodule
 - configuration is now done in `config.py` instead of `~/.ppymrc`
 - another restyling
