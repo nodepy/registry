@@ -4,7 +4,7 @@
   <ul>
   {% for page in pages %}
     <li {% if page.path == active_page %}class="active"{% endif %}>
-      <a {% if page.path is not none %}href="{{url_for('docs', path=page.path)}}"{% endif %}>{{page.name}}</a>
+      <a href="{{url_for('docs', path=page.path)}}">{{page.name}}</a>
     </li>
     {% if page.path == active_page %}
       {{ toc|safe }}

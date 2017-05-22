@@ -42,7 +42,7 @@ def find_page(path):
 
 @app.route('/docs')
 @app.route('/docs/<path:path>')
-def docs(path=''):
+def docs(path=None):
   # Find the active page.
   page = find_page(path)
   if not page: abort(404)
