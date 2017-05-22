@@ -24,6 +24,7 @@ import json
 import markupsafe
 import os
 import sys
+import time
 from six.moves import urllib
 
 import manifest from '@nodepy/pm/lib/manifest'
@@ -37,6 +38,12 @@ app = flask.Flask('nodepy-registry', template_folder=os.path.join(__directory__,
 app.debug = require('../config').debug
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 sass(app, force=app.debug)
+
+def static(fn, dbg_force_reload=False):
+  result = utils.url_for('static', filename=fn)
+  if app.debug and dbg_force_reload:
+    result += '?v=' + str(time.time())
+  return result
 
 # Initialize the Jinja environment globals and filters..
 app.jinja_env.globals.update({
@@ -53,7 +60,7 @@ app.jinja_env.globals.update({
   'urlparse': urllib.parse.urlparse,
   'url_for': utils.url_for,
   'active': utils.active,
-  'static': lambda fn: utils.url_for('static', filename=fn)
+  'static': static
 })
 
 app.jinja_env.filters.update({
