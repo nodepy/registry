@@ -25,55 +25,32 @@ from flask import abort, request, render_template
 
 import app from '../app'
 import markdown from '../markdown'
+
 basedir = os.path.join(app.root_path, '_vendor/nodepy/docs')
+pages = require(os.path.join(basedir, '_pages.json'))
 
 
-def _load_pages():
-  Page = collections.namedtuple('Page', 'name path subs')
-  configfn = os.path.join(app.root_path, '_vendor/nodepy/docs/pages.yml')
-  with open(configfn) as fp:
-    pages = yaml.load(fp)['pages']
-  def convert(page):
-    key, value = next(iter(page.items()))
-    if isinstance(value, list):
-      subs = [convert(c) for c in value]
-      path = next((x for x in subs if x.path.endswith('index')), None)
-      if path:
-        subs.remove(path)
-        path = path.path.rstrip('index').rstrip('/')
-    else:
-      subs = []
-      path = value.rstrip('.md').rstrip('index')
-    return Page(key, path, subs)
-  return [convert(c) for c in pages]
-
-pages = _load_pages()
+def find_page(path):
+  def recursion(pages):
+    for p in pages:
+      if p['path'] == path: return p
+      s = recursion(p.get('subs', []))
+      if s: return s
+    return None
+  return recursion(pages)
 
 
-def find_page(path, pages=None):
-  if pages is None:
-    pages = globals()['pages']
-  for p in pages:
-    if p.path == path: return p
-    s = find_page(path, p.subs)
-    if s: return s
-  return None
-
-
-@app.route('/docs/')
+@app.route('/docs')
 @app.route('/docs/<path:path>')
 def docs(path=''):
+  # Find the active page.
   page = find_page(path)
   if not page: abort(404)
-  filename = os.path.join(app.root_path, basedir, path)
-  if os.path.isdir(filename):
-    filename = os.path.join(filename, 'index.md')
-  else:
-    filename += '.md'
-  # Find the active page.
-  if os.path.isfile(filename):
-    with open(filename, 'r') as fp:
-      md = markdown()
-      content = md.convert(fp.read())
+
+  filename = os.path.join(basedir, page['file'])
+  with open(filename, 'r') as fp:
+    md = markdown()
+    content = md.convert(fp.read())
+
   return render_template('registry/docs.html',
     content=content, toc=md.toc, pages=pages, active_page=path, page=page)
