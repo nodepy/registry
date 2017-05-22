@@ -12,6 +12,7 @@ port = 8000
 # The visible url of the application. This url is used for example in
 # the mail sent to verify your email address after registering an account.
 visible_url = 'http://{}:{}'.format(host, port)
+server_name = urlparse(visible_url).netloc
 
 # Run in debug mode.
 debug = True
@@ -30,7 +31,7 @@ mongodb = {
 
 # Email configuration.
 email = {
-  'origin': 'no-reply@{}'.format(urlparse(visible_url).netloc.partition(':')[0]),
+  'origin': 'no-reply@{}'.format(server_name.partition(':')[0]),
   'smtp_host': 'localhost:25',
   'smtp_ssl': False
 }

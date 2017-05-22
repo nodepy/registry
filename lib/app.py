@@ -33,9 +33,10 @@ import resources from './resources'
 import utils from './utils'
 import markdown from './markdown'
 import sass from './sass'
+import config from "../config"
 
 app = flask.Flask('nodepy-registry', template_folder=os.path.join(__directory__, '../templates'))
-app.debug = require('../config').debug
+app.debug = config.debug
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 sass(app, force=app.debug)
 
@@ -55,7 +56,7 @@ app.jinja_env.globals.update({
   'Package': models.Package,
   'PackageVersion': models.PackageVersion,
   'resources': resources,
-  'config': require('../config'),
+  'config': config,
   'jsonfmt': json.dumps,
   'urlparse': urllib.parse.urlparse,
   'url_for': utils.url_for,
