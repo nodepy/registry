@@ -154,6 +154,10 @@ main .sidebar {
     display: none;
     min-width: none;
     max-width: none;
+
+    &.visible {
+      display: flex;
+    }
   }
 }
 
