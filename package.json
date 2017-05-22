@@ -4,6 +4,7 @@
   "license": "MIT",
   "description": "the nodepy package registry",
   "repository": "https://github.com/nodepy/registry",
+  "main": "server",
   "engines": {
     "nodepy": ">=0.0.6",
     "python": ">=2.7.0 || >=3.3.0"
