@@ -21,6 +21,8 @@
   {{ render_nav(pages) }}
 {% endblock %}
 {% block content %}
-  <h1>{{ page.name }}</h1>
+  {% if page.showTitle %}
+    <h1>{{ page.name }}</h1>
+  {% endif %}
   {{ content|safe }}
 {% endblock %}
